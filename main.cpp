@@ -16,9 +16,11 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    Controller * controller = new Controller();
+    Controller * controller = new Controller(&w);
 
-    controller->runClustering("g2.txt", 2, 1, 100, false);
+    w.setController(controller);
+
+
 
     return a.exec();
 }
