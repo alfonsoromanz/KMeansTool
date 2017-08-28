@@ -6,8 +6,17 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->ui->plainTextEdit->insertPlainText(QString("KMeansTool by Alfonso Román Zubeldia"));
+    this->printMessage(QString("KMeansTool"));
+    this->printMessageLine(QString("By Alfonso Román Zubeldia"));
     this->ui->plainTextEdit->setReadOnly(true);
+}
+
+void MainWindow::printMessage(const QString & message) {
+    this->ui->plainTextEdit->insertPlainText(message);
+}
+
+void MainWindow::printMessageLine(const QString & message) {
+    printMessage("\n" + message);
 }
 
 MainWindow::~MainWindow()

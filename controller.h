@@ -2,6 +2,7 @@
 #define CONTROLLER_H
 #include <mlpack/core.hpp>
 #include <cmath>
+#include <QString>
 #include <mlpack/methods/kmeans/kmeans.hpp>
 
 class MainWindow;

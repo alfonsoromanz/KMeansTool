@@ -15,6 +15,8 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     void setController (Controller * c);
+    void printMessage (const QString & message);
+    void printMessageLine(const QString & message);
     ~MainWindow();
 
 private:
