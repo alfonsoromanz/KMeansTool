@@ -17,7 +17,7 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
 
     arma::mat auxData;
     arma::Row<size_t> originalAssignments;
-    QMap<int, QVector<double>> clusterDictionary; // <Original Cluster, Original Center>
+    QMap<int, arma::Row<size_t>> clusterDictionary; // <Original Cluster, Original Center>
     QVector <int> equivalences; //if equivalences.at(0)=3, cluster 0 is the original cluster 3
 
     /*
@@ -25,6 +25,22 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
      */
     if (testingMode) {
         //data::Load(dataset, aux, true)
+        data::Load(dataset, auxData, true);
+        data.zeros(auxData.n_rows-1, auxData.n_cols);
+
+        for (size_t r=1; r<auxData.n_rows; ++r)
+            for (size_t c=0; c<auxData.n_cols; ++c) {
+                data(r-1,c)=auxData(r,c);
+            }
+
+        /*size_t last_row = auxData.n_rows-1;
+        for (size_t col=0; col<auxData.n_cols; col++) {
+            originalAssignments[col] = auxData(last_row,col);
+        }*/
+
+        std::cout << "AA";
+
+        data::Save("preprocesada.txt", data, true);
         //copy aux -> data without cluster values
         //also create array with original cluster assignment
     } else {
