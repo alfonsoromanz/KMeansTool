@@ -4,6 +4,8 @@
 #include <cmath>
 #include <QString>
 #include <mlpack/methods/kmeans/kmeans.hpp>
+#include <QVector>
+#include <QMap>
 
 class MainWindow;
 

@@ -6,6 +6,7 @@
 #include <mlpack/methods/kmeans/kmeans.hpp>
 
 
+
 using namespace mlpack;
 using namespace mlpack::kmeans;
 using namespace mlpack::metric;

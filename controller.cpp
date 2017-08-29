@@ -1,10 +1,12 @@
 #include "controller.h"
 #include "mainwindow.h"
 
+
 Controller::Controller(MainWindow * w)
 {
     view = w;
 }
+
 
 void Controller::runClustering (const char* dataset, const size_t k, int metric, int maxIterations, bool testingMode) {
     arma::mat data; // Will save all the vectors
@@ -12,6 +14,11 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
     arma::Row<size_t> assignments; // Will save the final assignments
 
     arma::mat centroids; // Will save the final centroids
+
+    arma::mat auxData;
+    arma::Row<size_t> originalAssignments;
+    QMap<int, QVector<double>> clusterDictionary; // <Original Cluster, Original Center>
+    QVector <int> equivalences; //if equivalences.at(0)=3, cluster 0 is the original cluster 3
 
     /*
      * Loads dataset in data Matrix
@@ -26,7 +33,7 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
 
 
     /*
-     * K-means Modle
+     * K-means Model
      */
 
     if (metric == 1) {
