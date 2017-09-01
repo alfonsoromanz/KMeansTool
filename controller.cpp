@@ -24,7 +24,7 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
      * Loads dataset in data Matrix
      */
     if (testingMode) {
-        //data::Load(dataset, aux, true)
+        //Asume que la primer columna es el cluster
         data::Load(dataset, auxData, true);
         data.zeros(auxData.n_rows-1, auxData.n_cols);
 
@@ -33,13 +33,14 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
                 data(r-1,c)=auxData(r,c);
             }
 
-        /*size_t last_row = auxData.n_rows-1;
+        originalAssignments.zeros(auxData.n_cols);
+        size_t cluster_row = 0; //asume la primera fila
         for (size_t col=0; col<auxData.n_cols; col++) {
-            originalAssignments[col] = auxData(last_row,col);
-        }*/
+            originalAssignments[col] = auxData(cluster_row,col);
+        }
 
-        std::cout << "AA";
 
+        data::Save("originales.txt", originalAssignments, true);
         data::Save("preprocesada.txt", data, true);
         //copy aux -> data without cluster values
         //also create array with original cluster assignment
