@@ -28,11 +28,13 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
         data::Load(dataset, auxData, true);
         data.zeros(auxData.n_rows-1, auxData.n_cols);
 
+        //copy aux -> data without cluster values
         for (size_t r=1; r<auxData.n_rows; ++r)
             for (size_t c=0; c<auxData.n_cols; ++c) {
                 data(r-1,c)=auxData(r,c);
             }
 
+        //also create array with original cluster assignment
         originalAssignments.zeros(auxData.n_cols);
         size_t cluster_row = 0; //asume la primera fila
         for (size_t col=0; col<auxData.n_cols; col++) {
@@ -42,12 +44,13 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
 
         data::Save("originales.txt", originalAssignments, true);
         data::Save("preprocesada.txt", data, true);
-        //copy aux -> data without cluster values
-        //also create array with original cluster assignment
+
+
     } else {
         data::Load(dataset, data, true);
     }
 
+    data::Save("means.txt", getMean(data,5,9), true);
 
     /*
      * K-means Model
@@ -90,4 +93,25 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
 
     data::Save("assignments_result.csv", assignments, true);
     data::Save("centroids_result.csv", centroids, true);
+}
+
+arma::Row<double> Controller::getMean(arma::mat data, size_t startCol, size_t endCol)
+{
+    arma::Row<double> result;
+    size_t dim = data.n_rows;
+    size_t n = endCol - startCol + 1;
+    result.zeros(dim);
+
+    //calculate the sum
+    for (size_t col=startCol; col<=endCol; col++) {
+        for (size_t i=0; i<dim; i++) {
+            result[i] += data(i,col);
+        }
+    }
+
+    //divide by n
+    for (size_t i=0; i<dim; i++) {
+        result[i] = result[i] / n;
+    }
+    return result;
 }
