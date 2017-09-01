@@ -49,17 +49,8 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
     } else {
         data::Load(dataset, data, true);
     }
-    std::cout << "ACA";
-    data::Save("means.txt", getMean(data,5,9), true);
-    std::cout <<"A";
 
-    QMap<int, arma::Col<double>> means (calculateMeans(data, originalAssignments));
-    std::cout << "B";
-
-    QList<int> keys(means.keys());
-    for (int i=0; i<keys.size(); i++) {
-        std::cout << "Cluster: " << keys.at(i) << " --> MEDIA: " << means.value(keys.at(i)) << ".\n";
-    }
+    //data::Save("means.txt", getMean(data,5,9), true);
 
     /*
      * K-means Model
@@ -83,6 +74,12 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
     if (testingMode) {
 
         //calculate original centers using data and originalAssignments (Map<cluster, center>)
+        QMap<int, arma::Col<double>> means (calculateMeans(data, originalAssignments));
+        /*
+        QList<int> keys(means.keys());
+        for (int i=0; i<keys.size(); i++) {
+            std::cout << "Cluster: " << keys.at(i) << " --> MEDIA: " << means.value(keys.at(i)) << ".\n";
+        }*/
 
         //Create equivalences array
 
