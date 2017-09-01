@@ -21,6 +21,7 @@ public:
 
 private:
    MainWindow * view;
+   QMap<int, arma::Col<double>> calculateMeans (arma::mat data, arma::Row<size_t> originalAssignments);
    arma::Row<double> getMean (arma::mat data, size_t startCol, size_t endCol);
    size_t getEndOfSequence (arma::Row<size_t> pointsVector, size_t start);
 };
