@@ -17,8 +17,6 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
 
     arma::mat auxData;
     arma::Row<size_t> originalAssignments;
-    QMap<int, arma::Row<size_t>> clusterDictionary; // <Original Cluster, Original Center>
-    QVector <int> equivalences; //if equivalences.at(0)=3, cluster 0 is the original cluster 3
 
     /*
      * Loads dataset in data Matrix
@@ -74,28 +72,43 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
     if (testingMode) {
 
         //calculate original centers using data and originalAssignments (Map<cluster, center>)
-        QMap<int, arma::Col<double>> means (calculateMeans(data, originalAssignments));
+        QMap<int, arma::Col<double>> clusterDictionary (calculateMeans(data, originalAssignments));
         /*
         QList<int> keys(means.keys());
         for (int i=0; i<keys.size(); i++) {
             std::cout << "Cluster: " << keys.at(i) << " --> MEDIA: " << means.value(keys.at(i)) << ".\n";
         }*/
 
-        //Create equivalences array
-
         //Create report for each point wrong classified
+        int wrongPoints = 0;
+        QList<QString> reportedPoints;
+        for (size_t col=0; col < data.n_cols; col++) {
+            if (originalAssignments[col] != assignments[col]) {
+                wrongPoints++;
+                QString message = "\tEl punto '" + QString::number(col) + "' : \n";
+                message += "\t\t"+ pointToString(data, col) + "\n";
+                message += "\tHa sido clasificado al cluster '" + QString::number(assignments[col]) + "', con centro en: \n";
+                message += "\t\t"+ pointToString(centroids, assignments[col]) + "\n";
+                message += "\tY debia ser clasificado al cluster '" + QString::number(originalAssignments[col]) + "', con centro en: \n";
+                message += "\t\t"+ colToString(clusterDictionary.value(originalAssignments[col])) + "\n";
+                reportedPoints.push_back(message);
+            }
+        }
+        for (int i=0; i<reportedPoints.size(); i++) {
+            std::cout << std::endl << reportedPoints.at(i).toStdString();
+        }
 
     }
 
 
     // Show Assignments
-    /*
+
     for (size_t i = 0; i < assignments.n_elem; ++i)
     {
         std::cout << "El punto " << i << " se asigno al cluster: "
                   << assignments[i] << ".\n";
         view->printMessageLine(QString("El punto " + QString::number(i) + " se asigno al Cluster: " + QString::number(assignments[i])));
-    }*/
+    }
 
 
     data::Save("assignments_result.csv", assignments, true);
@@ -159,12 +172,24 @@ arma::Row<double> Controller::getMean(arma::mat data,size_t startCol, size_t end
     return result;
 }
 
-size_t Controller::getEndOfSequence(arma::Row<size_t> pointsVector, size_t start)
+
+
+QString Controller::pointToString(arma::mat &data, size_t pointColumn)
 {
-    if (start<0 || start >= pointsVector.n_rows) {
-        return -1;
+    QString result;
+    result = "";
+    for (size_t row=0; row < data.n_rows; row++) {
+        result += QString::number(data(row, pointColumn)) + "\t";
     }
+    return result;
+}
 
-    int cluster = pointsVector.at(start);
-
+QString Controller::colToString(const arma::Col<double> &data)
+{
+    QString result;
+    result = "";
+    for (size_t row=0; row < data.n_rows; row++) {
+        result += QString::number(data.at(row)) + "\t";
+    }
+    return result;
 }
