@@ -7,6 +7,7 @@
 #include <QVector>
 #include <QMap>
 #include "sstream"
+#include "fstream"
 
 class MainWindow;
 

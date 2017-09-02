@@ -53,14 +53,21 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
     /*
      * K-means Model
      */
-
+    std::string metricName;
     if (metric == 1) {
+
+        metricName = "Manhattan";
         KMeans<ManhattanDistance> k_means(maxIterations);
         k_means.Cluster(data, k, assignments, centroids);
+
     } else if (metric == 2) {
+
+        metricName = "Euclidean";
         KMeans<EuclideanDistance> k_means(maxIterations);
         k_means.Cluster(data, k, assignments, centroids);
     } else {
+
+        metricName = "Chebysehv";
         KMeans<ChebyshevDistance> k_means(maxIterations);
         k_means.Cluster(data, k, assignments, centroids);
     }
@@ -95,11 +102,24 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
             }
         }
 
-        std::cout << "WRONG : " << wrongPoints << std::endl;
-
-        for (int i=0; i<reportedPoints.size(); i++) {
-            std::cout << std::endl << reportedPoints.at(i).toStdString();
+        std::ofstream report;
+        report.open("report.txt");
+        report << "\n Resultados del clustering";
+        report << "\n *************************";
+        report << "\n\n Dataset: " + std::string(dataset);
+        report << "\n Metrica utilizada: " << metricName;
+        report << "\n Puntos mal clasificados: " << wrongPoints << "\n\n";
+        if (wrongPoints>0) {
+            for (int i=0; i<reportedPoints.size(); i++) {
+                report << std::endl << reportedPoints.at(i).toStdString();
+            }
         }
+
+        report << std::endl;
+
+       report.close();
+
+
 
 
     }
