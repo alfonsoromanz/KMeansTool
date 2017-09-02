@@ -86,17 +86,21 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
             if (originalAssignments[col] != assignments[col]) {
                 wrongPoints++;
                 QString message = "\tEl punto '" + QString::number(col) + "' : \n";
-                message += "\t\t"+ pointToString(data, col) + "\n";
-                message += "\tHa sido clasificado al cluster '" + QString::number(assignments[col]) + "', con centro en: \n";
-                message += "\t\t"+ pointToString(centroids, assignments[col]) + "\n";
-                message += "\tY debia ser clasificado al cluster '" + QString::number(originalAssignments[col]) + "', con centro en: \n";
-                message += "\t\t"+ colToString(clusterDictionary.value(originalAssignments[col])) + "\n";
+                message += "\n\t\t"+ pointToString(data, col) + "\n\n";
+                message += "\t\tHa sido clasificado al cluster '" + QString::number(assignments[col]) + "', con centro en: \n";
+                message += "\n\t\t\t"+ pointToString(centroids, assignments[col]) + "\n\n";
+                message += "\t\tY debia ser clasificado al cluster '" + QString::number(originalAssignments[col]) + "', con centro en: \n";
+                message += "\n\t\t\t"+ colToString(clusterDictionary.value(originalAssignments[col])) + "\n";
                 reportedPoints.push_back(message);
             }
         }
+
+        std::cout << "WRONG : " << wrongPoints << std::endl;
+
         for (int i=0; i<reportedPoints.size(); i++) {
             std::cout << std::endl << reportedPoints.at(i).toStdString();
         }
+
 
     }
 
