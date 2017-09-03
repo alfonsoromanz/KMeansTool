@@ -27,6 +27,8 @@ private:
    arma::Row<double> getMean (arma::mat data, size_t startCol, size_t endCol);
    QString pointToString(arma::mat &data, size_t pointColumn);
    QString colToString(const arma::Col<double> &data);
+   QMap <int, int> clusterEquivalences(const QMap<int, arma::Col<double>> &originalCentroids, const arma::mat &newCentroids, int metric);
+   double getDistance (const arma::Col<double> &pointA, const arma::Col<double> &pointB, int metric);
 };
 
 #endif // CONTROLLER_H

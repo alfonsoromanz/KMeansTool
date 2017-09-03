@@ -89,8 +89,10 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
         //Create report for each point wrong classified
         int wrongPoints = 0;
         QList<QString> reportedPoints;
+
+        QMap<int,int> equivalences(this->clusterEquivalences(clusterDictionary, centroids, metric));
         for (size_t col=0; col < data.n_cols; col++) {
-            if (originalAssignments[col] != assignments[col]) {
+            if (originalAssignments[col]!= equivalences.value(assignments[col])) {
                 wrongPoints++;
                 QString message = "\tEl punto '" + QString::number(col) + "' : \n";
                 message += "\n\t\t"+ pointToString(data, col) + "\n\n";
@@ -216,4 +218,46 @@ QString Controller::colToString(const arma::Col<double> &data)
         result += QString::number(data.at(row)) + "\t";
     }
     return result;
+}
+
+QMap<int, int> Controller::clusterEquivalences(const QMap<int, arma::Col<double>> &originalCentroids, const arma::mat &newCentroids, int metric)
+{
+    QMap<int,int> result;
+    QList<int> keys(originalCentroids.keys());
+    for (size_t col=0; col<newCentroids.n_cols; col++) {
+        arma::Col<double> centroid = newCentroids.col(col);
+        double minDistance=99999;
+        size_t nearest = 0;
+        for (size_t i=0; i<keys.size(); i++) {
+            double dist = getDistance(centroid, originalCentroids.value(keys.at(i)), metric);
+            if (dist<minDistance) {
+                minDistance=dist;
+                nearest = keys.at(i);
+            }
+        }
+        result.insert(col, nearest);
+    }
+    QList<int> keys2 (result.keys());
+    for (int i=0; i<keys2.size(); i++) {
+        int nuevo = keys2.at(i);
+        int original = result.value(nuevo);
+        std::cout << std::endl << "El equivalente a: " << nuevo << " es :" << original << std::endl;
+    }
+
+    return result;
+}
+
+double Controller::getDistance(const arma::Col<double> &pointA, const arma::Col<double> &pointB, int metric)
+{
+    if (metric==1) {
+        ManhattanDistance metric;
+        return metric.Evaluate(pointA, pointB);
+    } else if (metric ==2) {
+        EuclideanDistance metric;
+        return metric.Evaluate(pointA, pointB);
+    } else if (metric==3) {
+        ChebyshevDistance metric;
+        return metric.Evaluate(pointA, pointB);
+    }
+    return 0;
 }
