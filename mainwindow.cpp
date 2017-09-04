@@ -26,6 +26,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::setController(Controller * c) {
     controller = c;
-    controller->runClustering("g2_known.txt", 2, 1, 100, true);
 
+
+}
+
+void MainWindow::on_loadButton_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this);
+    //this->datasetLabel.setText(fileName);
+    std::cout << std::endl << "FILE : " << fileName.toStdString();
+}
+
+void MainWindow::on_runButton_clicked()
+{
+    controller->runClustering("g2_known.txt", 2, 1, 100, true);
 }

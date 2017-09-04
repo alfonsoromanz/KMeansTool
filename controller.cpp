@@ -42,8 +42,8 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
         }
 
 
-        data::Save("originales.txt", originalAssignments, true);
-        data::Save("preprocesada.txt", data, true);
+        //data::Save("originales.txt", originalAssignments, true);
+        //data::Save("preprocesada.txt", data, true);
 
 
     } else {
@@ -56,6 +56,7 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
      * K-means Model
      */
     std::string metricName;
+    auto begin1 = std::chrono::high_resolution_clock::now();
     if (metric == 1) {
 
         metricName = "Manhattan";
@@ -73,6 +74,7 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
         KMeans<ChebyshevDistance> k_means(maxIterations);
         k_means.Cluster(data, k, assignments, centroids);
     }
+    auto end2 = std::chrono::high_resolution_clock::now();
 
     /*
      * After Clustering
@@ -144,6 +146,7 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
 
     auto end = std::chrono::high_resolution_clock::now();
     std::cout << std::endl << "TIEMPO : "<< std::chrono::duration_cast<std::chrono::seconds>(end-begin).count() << " s" << std::endl;
+    std::cout << std::endl << "TIEMPO : "<< std::chrono::duration_cast<std::chrono::seconds>(end2-begin1).count() << " s" << std::endl;
 }
 
 QMap<int,arma::Col<double>> Controller::calculateMeans(arma::mat data, arma::Row<size_t> originalAssignments)

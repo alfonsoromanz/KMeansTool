@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "controller.h"
+#include <QFile>
+#include <QtWidgets>
 
 namespace Ui {
 class MainWindow;
@@ -18,6 +20,11 @@ public:
     void printMessage (const QString & message);
     void printMessageLine(const QString & message);
     ~MainWindow();
+
+private slots:
+    void on_loadButton_clicked();
+
+    void on_runButton_clicked();
 
 private:
     Ui::MainWindow *ui;
