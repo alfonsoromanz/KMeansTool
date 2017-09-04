@@ -9,6 +9,7 @@ Controller::Controller(MainWindow * w)
 
 
 void Controller::runClustering (const char* dataset, const size_t k, int metric, int maxIterations, bool testingMode) {
+    auto begin = std::chrono::high_resolution_clock::now();
     arma::mat data; // Will save all the vectors
 
     arma::Row<size_t> assignments; // Will save the final assignments
@@ -31,6 +32,7 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
             for (size_t c=0; c<auxData.n_cols; ++c) {
                 data(r-1,c)=auxData(r,c);
             }
+
 
         //also create array with original cluster assignment
         originalAssignments.zeros(auxData.n_cols);
@@ -139,6 +141,9 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
 
     data::Save("assignments_result.csv", assignments, true);
     data::Save("centroids_result.csv", centroids, true);
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::cout << std::endl << "TIEMPO : "<< std::chrono::duration_cast<std::chrono::seconds>(end-begin).count() << " s" << std::endl;
 }
 
 QMap<int,arma::Col<double>> Controller::calculateMeans(arma::mat data, arma::Row<size_t> originalAssignments)
@@ -237,12 +242,7 @@ QMap<int, int> Controller::clusterEquivalences(const QMap<int, arma::Col<double>
         }
         result.insert(col, nearest);
     }
-    QList<int> keys2 (result.keys());
-    for (int i=0; i<keys2.size(); i++) {
-        int nuevo = keys2.at(i);
-        int original = result.value(nuevo);
-        std::cout << std::endl << "El equivalente a: " << nuevo << " es :" << original << std::endl;
-    }
+
 
     return result;
 }

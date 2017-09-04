@@ -8,6 +8,7 @@
 #include <QMap>
 #include "sstream"
 #include "fstream"
+#include <ctime>
 
 class MainWindow;
 

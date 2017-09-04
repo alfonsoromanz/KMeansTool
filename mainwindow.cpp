@@ -26,6 +26,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::setController(Controller * c) {
     controller = c;
-    controller->runClustering("cluster.txt", 3, 1, 100, true);
+    controller->runClustering("g2_known.txt", 2, 1, 100, true);
 
 }
