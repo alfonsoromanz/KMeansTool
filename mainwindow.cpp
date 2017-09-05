@@ -13,10 +13,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::printMessage(const QString & message) {
     this->ui->plainTextEdit->insertPlainText(message);
+    qApp->processEvents();
 }
 
 void MainWindow::printMessageLine(const QString & message) {
     printMessage("\n" + message);
+    qApp->processEvents();
+}
+
+void MainWindow::clear() {
+    this->ui->plainTextEdit->clear();
+    qApp->processEvents();
 }
 
 MainWindow::~MainWindow()

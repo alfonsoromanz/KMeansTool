@@ -9,6 +9,9 @@ Controller::Controller(MainWindow * w)
 
 
 void Controller::runClustering (const char* dataset, const size_t k, int metric, int maxIterations, bool testingMode) {
+    view->clear();
+    view->printMessageLine("Ejecutando clustering...");
+
     auto begin = std::chrono::high_resolution_clock::now();
     arma::mat data; // Will save all the vectors
 
@@ -63,24 +66,28 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
         KMeans<ManhattanDistance> k_means(maxIterations);
         k_means.Cluster(data, k, assignments, centroids);
 
-    } else if (metric == 2) {
+    } else if (metric == 0) {
 
         metricName = "Euclidean";
         KMeans<EuclideanDistance> k_means(maxIterations);
         k_means.Cluster(data, k, assignments, centroids);
     } else {
 
-        metricName = "Chebysehv";
+        metricName = "Chebyshev";
         KMeans<ChebyshevDistance> k_means(maxIterations);
         k_means.Cluster(data, k, assignments, centroids);
     }
     auto end2 = std::chrono::high_resolution_clock::now();
+
+    this->view->printMessageLine(QString("\nClustering Finalizado (Tiempo: " + QString::number(std::chrono::duration_cast<std::chrono::nanoseconds>(end2-begin1).count()) + " ns)."));
+
 
     /*
      * After Clustering
      */
 
     if (testingMode) {
+        this->view->printMessageLine(QString("\nGenerando reporte..."));
 
         //calculate original centers using data and originalAssignments (Map<cluster, center>)
         QMap<int, arma::Col<double>> clusterDictionary (calculateMeans(data, originalAssignments));
@@ -124,6 +131,8 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
         report << std::endl;
 
        report.close();
+       this->view->printMessageLine(QString("\nReporte almacenado en report.txt"));
+
 
 
 
@@ -132,13 +141,14 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
 
 
     // Show Assignments
+    /*
 
     for (size_t i = 0; i < assignments.n_elem; ++i)
     {
         std::cout << "El punto " << i << " se asigno al cluster: "
                   << assignments[i] << ".\n";
         view->printMessageLine(QString("El punto " + QString::number(i) + " se asigno al Cluster: " + QString::number(assignments[i])));
-    }
+    }*/
 
 
     data::Save("assignments_result.csv", assignments, true);
@@ -146,7 +156,8 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
 
     auto end = std::chrono::high_resolution_clock::now();
     std::cout << std::endl << "TIEMPO : "<< std::chrono::duration_cast<std::chrono::seconds>(end-begin).count() << " s" << std::endl;
-    std::cout << std::endl << "TIEMPO : "<< std::chrono::duration_cast<std::chrono::seconds>(end2-begin1).count() << " s" << std::endl;
+
+
 }
 
 QMap<int,arma::Col<double>> Controller::calculateMeans(arma::mat data, arma::Row<size_t> originalAssignments)
@@ -255,10 +266,10 @@ double Controller::getDistance(const arma::Col<double> &pointA, const arma::Col<
     if (metric==1) {
         ManhattanDistance metric;
         return metric.Evaluate(pointA, pointB);
-    } else if (metric ==2) {
+    } else if (metric ==0) {
         EuclideanDistance metric;
         return metric.Evaluate(pointA, pointB);
-    } else if (metric==3) {
+    } else if (metric==2) {
         ChebyshevDistance metric;
         return metric.Evaluate(pointA, pointB);
     }

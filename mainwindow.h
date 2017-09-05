@@ -5,6 +5,7 @@
 #include "controller.h"
 #include <QFile>
 #include <QtWidgets>
+#include <QApplication>
 
 namespace Ui {
 class MainWindow;
@@ -19,6 +20,7 @@ public:
     void setController (Controller * c);
     void printMessage (const QString & message);
     void printMessageLine(const QString & message);
+    void clear();
     ~MainWindow();
 
 private slots:
