@@ -84,7 +84,7 @@
       <string>Max. Iterations</string>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBox_2">
+    <widget class="QComboBox" name="modeBox">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -162,7 +162,7 @@
       <number>500</number>
      </property>
     </widget>
-    <widget class="QComboBox" name="comboBox">
+    <widget class="QComboBox" name="metricsBox">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -223,12 +223,12 @@
     <zorder>clustersBox</zorder>
     <zorder>clustersBox</zorder>
     <zorder>label_3</zorder>
-    <zorder>comboBox_2</zorder>
+    <zorder>modeBox</zorder>
     <zorder>label</zorder>
     <zorder>toolButton</zorder>
     <zorder>label_4</zorder>
     <zorder>maxIterationsBox</zorder>
-    <zorder>comboBox</zorder>
+    <zorder>metricsBox</zorder>
     <zorder>label_2</zorder>
     <zorder>label_5</zorder>
    </widget>

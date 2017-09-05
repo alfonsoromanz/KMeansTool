@@ -53,7 +53,12 @@ void MainWindow::on_loadButton_clicked()
 void MainWindow::on_runButton_clicked()
 {
     if (datasetReady) {
-        controller->runClustering(datasetMatrix, 2, 1, 100, this->datasetDir, this->datasetName, true);
+        int k = this->ui->clustersBox->value();
+        int max_iterations = this->ui->maxIterationsBox->value();
+        int metric = this->ui->metricsBox->currentIndex();
+        bool testingMode = this->ui->modeBox->currentIndex();
+        std::cout << std::endl << k << ", " << max_iterations << ", " << metric << std::endl;
+        controller->runClustering(datasetMatrix, k, metric, max_iterations, this->datasetDir, this->datasetName, testingMode);
     }
 }
 
