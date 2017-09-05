@@ -31,6 +31,15 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Controller * controller;
+
+    bool datasetReady = false;
+    QString datasetDir = "";
+    QString datasetName ="";
+    arma::mat datasetMatrix;
+
+    bool processDataset (const QString &dataset);
+    QString getDirectory (const QString & filePath);
+    QString getFileName (const QString & filePath);
 };
 
 #endif // MAINWINDOW_H

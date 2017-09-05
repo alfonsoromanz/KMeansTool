@@ -39,12 +39,40 @@ void MainWindow::setController(Controller * c) {
 
 void MainWindow::on_loadButton_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this);
-    //this->datasetLabel.setText(fileName);
-    std::cout << std::endl << "FILE : " << fileName.toStdString();
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Load Dataset"), "./", tr("Text Files (*.txt *.csv)"));
+    if (fileName != NULL) {
+        if (this->processDataset(fileName)) {
+           this->ui->datasetLabel->setText(fileName);
+           this->datasetDir = this->getDirectory(fileName);
+           this->datasetName = this->getFileName(fileName);
+           this->datasetReady = true;
+        }
+    }
 }
 
 void MainWindow::on_runButton_clicked()
 {
-    controller->runClustering("g2_known.txt", 2, 1, 100, true);
+    if (datasetReady) {
+        controller->runClustering(datasetMatrix, 2, 1, 100, this->datasetDir, this->datasetName, true);
+    }
+}
+
+bool MainWindow::processDataset(const QString &dataset)
+{
+    data::Load(dataset.toStdString().c_str(), this->datasetMatrix, true);
+    return 1;
+}
+
+QString MainWindow::getDirectory(const QString &filePath) {
+    QString ret = filePath;
+    ret.remove(this->getFileName(filePath));
+    return ret;
+}
+
+
+QString MainWindow::getFileName(const QString &filePath)
+{
+    QFileInfo i(filePath);
+    QString ret = i.fileName();
+    return ret;
 }

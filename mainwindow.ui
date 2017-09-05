@@ -248,9 +248,9 @@
    <widget class="QLabel" name="datasetLabel">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>130</x>
       <y>20</y>
-      <width>132</width>
+      <width>341</width>
       <height>17</height>
      </rect>
     </property>

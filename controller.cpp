@@ -8,40 +8,52 @@ Controller::Controller(MainWindow * w)
 }
 
 
-void Controller::runClustering (const char* dataset, const size_t k, int metric, int maxIterations, bool testingMode) {
+void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, int maxIterations, const QString &directory, const QString &file, bool testingMode) {
     view->clear();
     view->printMessageLine("Ejecutando clustering...");
 
     auto begin = std::chrono::high_resolution_clock::now();
-    arma::mat data; // Will save all the vectors
+    arma::mat data(dataset); // Will save all the vectors
 
     arma::Row<size_t> assignments; // Will save the final assignments
 
     arma::mat centroids; // Will save the final centroids
 
-    arma::mat auxData;
+
     arma::Row<size_t> originalAssignments;
+    std::cout << std::endl << directory.toStdString();
+    std::cout << std::endl << file.toStdString();
+
+
+
+    QString assignmentsPath = directory + QString("assignments.txt");
+    QString centroidsPath = directory + QString("centroids.txt");
+    QString reportPath = directory + QString("report.txt");
+
+
+
+
+
 
     /*
      * Loads dataset in data Matrix
      */
     if (testingMode) {
         //Asume que la primer columna es el cluster
-        data::Load(dataset, auxData, true);
-        data.zeros(auxData.n_rows-1, auxData.n_cols);
+        data.zeros(dataset.n_rows-1, dataset.n_cols);
 
         //copy aux -> data without cluster values
-        for (size_t r=1; r<auxData.n_rows; ++r)
-            for (size_t c=0; c<auxData.n_cols; ++c) {
-                data(r-1,c)=auxData(r,c);
+        for (size_t r=1; r<dataset.n_rows; ++r)
+            for (size_t c=0; c<dataset.n_cols; ++c) {
+                data(r-1,c)=dataset(r,c);
             }
 
 
         //also create array with original cluster assignment
-        originalAssignments.zeros(auxData.n_cols);
+        originalAssignments.zeros(dataset.n_cols);
         size_t cluster_row = 0; //asume la primera fila
-        for (size_t col=0; col<auxData.n_cols; col++) {
-            originalAssignments[col] = auxData(cluster_row,col);
+        for (size_t col=0; col<dataset.n_cols; col++) {
+            originalAssignments[col] = dataset(cluster_row,col);
         }
 
 
@@ -49,8 +61,6 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
         //data::Save("preprocesada.txt", data, true);
 
 
-    } else {
-        data::Load(dataset, data, true);
     }
 
     //data::Save("means.txt", getMean(data,5,9), true);
@@ -81,6 +91,13 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
 
     this->view->printMessageLine(QString("\nClustering Finalizado (Tiempo: " + QString::number(std::chrono::duration_cast<std::chrono::nanoseconds>(end2-begin1).count()) + " ns)."));
 
+    //Save assignments
+    this->view->printMessageLine(QString(QString("\nGuardando asignaciones en: ") + assignmentsPath));
+    data::Save(assignmentsPath.toStdString(), assignments, true);
+
+    //Save centroids
+    this->view->printMessageLine(QString(QString("\nGuardando centroides en: ") + centroidsPath));
+    data::Save(centroidsPath.toStdString(), centroids, true);
 
     /*
      * After Clustering
@@ -91,11 +108,7 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
 
         //calculate original centers using data and originalAssignments (Map<cluster, center>)
         QMap<int, arma::Col<double>> clusterDictionary (calculateMeans(data, originalAssignments));
-        /*
-        QList<int> keys(means.keys());
-        for (int i=0; i<keys.size(); i++) {
-            std::cout << "Cluster: " << keys.at(i) << " --> MEDIA: " << means.value(keys.at(i)) << ".\n";
-        }*/
+
 
         //Create report for each point wrong classified
         int wrongPoints = 0;
@@ -116,10 +129,10 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
         }
 
         std::ofstream report;
-        report.open("report.txt");
+        report.open(reportPath.toStdString().c_str());
         report << "\n Resultados del clustering";
         report << "\n *************************";
-        report << "\n\n Dataset: " + std::string(dataset);
+        report << "\n\n Dataset: " + QString(directory+file).toStdString();
         report << "\n Metrica utilizada: " << metricName;
         report << "\n Puntos mal clasificados: " << wrongPoints << "\n\n";
         if (wrongPoints>0) {
@@ -131,11 +144,7 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
         report << std::endl;
 
        report.close();
-       this->view->printMessageLine(QString("\nReporte almacenado en report.txt"));
-
-
-
-
+       this->view->printMessageLine(QString(QString("\nReporte almacenado en: ") + QString(reportPath)));
 
     }
 
@@ -151,8 +160,7 @@ void Controller::runClustering (const char* dataset, const size_t k, int metric,
     }*/
 
 
-    data::Save("assignments_result.csv", assignments, true);
-    data::Save("centroids_result.csv", centroids, true);
+
 
     auto end = std::chrono::high_resolution_clock::now();
     std::cout << std::endl << "TIEMPO : "<< std::chrono::duration_cast<std::chrono::seconds>(end-begin).count() << " s" << std::endl;

@@ -20,7 +20,7 @@ class Controller
 {
 public:
     Controller(MainWindow * w);
-    void runClustering (const char* dataset, const size_t clusters, int metric, int maxIterations, bool testingMode);
+    void runClustering (arma::mat &dataset, const size_t clusters, int metric, int maxIterations, const QString &directory, const QString &file, bool testingMode);
 
 private:
    MainWindow * view;
