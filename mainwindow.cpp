@@ -64,8 +64,17 @@ void MainWindow::on_runButton_clicked()
 
 bool MainWindow::processDataset(const QString &dataset)
 {
-    data::Load(dataset.toStdString().c_str(), this->datasetMatrix, true);
-    return 1;
+    bool success = 1;
+    success = data::Load(dataset.toStdString().c_str(), this->datasetMatrix, false);
+    if (!success) {
+        this->ui->datasetLabel->setText("Ningun dataset cargado");
+        this->datasetDir ="";
+        this->datasetName="";
+        this->datasetReady = false;
+        QMessageBox::warning(this, "ERROR", "Ocurrio un error al cargar el dataset");
+        qApp->processEvents();
+    }
+    return success;
 }
 
 QString MainWindow::getDirectory(const QString &filePath) {
