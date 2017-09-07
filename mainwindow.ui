@@ -34,7 +34,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Run KMeans</string>
+     <string>Ejecutar KMeans</string>
     </property>
    </widget>
    <widget class="QFrame" name="frame">
@@ -76,12 +76,12 @@
       <rect>
        <x>420</x>
        <y>40</y>
-       <width>101</width>
+       <width>111</width>
        <height>17</height>
       </rect>
      </property>
      <property name="text">
-      <string>Max. Iterations</string>
+      <string>Max. Iteraciones</string>
      </property>
     </widget>
     <widget class="QComboBox" name="modeBox">
@@ -95,12 +95,12 @@
      </property>
      <item>
       <property name="text">
-       <string>Discover Clusters</string>
+       <string>Descubrir Clusters</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Test Clustering</string>
+       <string>Test de Clustering</string>
       </property>
      </item>
     </widget>
@@ -109,12 +109,12 @@
       <rect>
        <x>20</x>
        <y>40</y>
-       <width>111</width>
+       <width>151</width>
        <height>17</height>
       </rect>
      </property>
      <property name="text">
-      <string>Distance Metric</string>
+      <string>Métrica de Distancia</string>
      </property>
     </widget>
     <widget class="QToolButton" name="toolButton">
@@ -135,12 +135,12 @@
       <rect>
        <x>20</x>
        <y>100</y>
-       <width>81</width>
+       <width>131</width>
        <height>17</height>
       </rect>
      </property>
      <property name="text">
-      <string>Tool Mode</string>
+      <string>Modo de Ejecución</string>
      </property>
     </widget>
     <widget class="QSpinBox" name="maxIterationsBox">
@@ -197,7 +197,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Number of Clusters</string>
+      <string>Nro. de Clusters</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_5">
@@ -217,7 +217,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Parameters and configurations</string>
+      <string>Parametros y configuraciones</string>
      </property>
     </widget>
     <zorder>clustersBox</zorder>
@@ -237,21 +237,21 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>98</width>
+      <width>111</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
-     <string>Load Dataset</string>
+     <string>Cargar Dataset</string>
     </property>
    </widget>
    <widget class="QLabel" name="datasetLabel">
     <property name="geometry">
      <rect>
-      <x>130</x>
+      <x>150</x>
       <y>20</y>
       <width>341</width>
-      <height>17</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
