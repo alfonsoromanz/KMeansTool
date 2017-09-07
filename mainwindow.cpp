@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->printMessage(QString("KMeansTool"));
     this->printMessageLine(QString("By Alfonso Román Zubeldia"));
     this->ui->plainTextEdit->setReadOnly(true);
+    this->ui->runButton->setDisabled(true);
 }
 
 void MainWindow::printMessage(const QString & message) {
@@ -46,6 +47,7 @@ void MainWindow::on_loadButton_clicked()
            this->datasetDir = this->getDirectory(fileName);
            this->datasetName = this->getFileName(fileName);
            this->datasetReady = true;
+           this->ui->runButton->setDisabled(false);
         }
     }
 }
@@ -71,6 +73,7 @@ bool MainWindow::processDataset(const QString &dataset)
         this->datasetDir ="";
         this->datasetName="";
         this->datasetReady = false;
+        this->ui->runButton->setDisabled(true);
         QMessageBox::warning(this, "ERROR", "Ocurrio un error al cargar el dataset");
         qApp->processEvents();
     }
