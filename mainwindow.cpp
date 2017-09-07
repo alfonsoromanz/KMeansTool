@@ -67,7 +67,9 @@ void MainWindow::on_runButton_clicked()
 bool MainWindow::processDataset(const QString &dataset)
 {
     bool success = 1;
+    this->changeCursor(Qt::WaitCursor, true);
     success = data::Load(dataset.toStdString().c_str(), this->datasetMatrix, false);
+    this->changeCursor(Qt::ArrowCursor, false);
     if (!success) {
         this->ui->datasetLabel->setText("Ningun dataset cargado");
         this->datasetDir ="";
@@ -92,4 +94,11 @@ QString MainWindow::getFileName(const QString &filePath)
     QFileInfo i(filePath);
     QString ret = i.fileName();
     return ret;
+}
+
+void MainWindow::changeCursor(Qt::CursorShape cursor, bool loadingFile)
+{
+    this->setCursor(cursor);
+    this->ui->loadButton->setDisabled(loadingFile);
+    qApp->processEvents();
 }

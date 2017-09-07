@@ -40,6 +40,8 @@ private:
     bool processDataset (const QString &dataset);
     QString getDirectory (const QString & filePath);
     QString getFileName (const QString & filePath);
+
+    void changeCursor(Qt::CursorShape cursor, bool loadingFile);
 };
 
 #endif // MAINWINDOW_H
