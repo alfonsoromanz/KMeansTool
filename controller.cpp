@@ -31,10 +31,6 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
     QString reportPath = directory + QString("report.txt");
 
 
-
-
-
-
     /*
      * Loads dataset in data Matrix
      */
@@ -89,7 +85,7 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
     }
     auto end2 = std::chrono::high_resolution_clock::now();
 
-    this->view->printMessageLine(QString("\nClustering Finalizado (Tiempo: " + QString::number(std::chrono::duration_cast<std::chrono::nanoseconds>(end2-begin1).count()) + " ns)."));
+    this->view->printMessageLine(QString("\nClustering Finalizado. Tiempo: " + QString::number(std::chrono::duration_cast<std::chrono::nanoseconds>(end2-begin1).count()) + " ns  (" + QString::number(std::chrono::duration_cast<std::chrono::seconds>(end2-begin1).count()) + " s)."));
 
     //Save assignments
     this->view->printMessageLine(QString(QString("\nGuardando asignaciones en: ") + assignmentsPath));
@@ -100,21 +96,25 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
     data::Save(centroidsPath.toStdString(), centroids, true);
 
     /*
-     * After Clustering
+     * After Clustering: Report
      */
 
+    this->view->printMessageLine(QString("\nGenerando reporte..."));
+
+    //calculate original centers using data and originalAssignments (Map<cluster, center>)
+    QMap<int, arma::Col<double>> * clusterDictionary = NULL;
     if (testingMode) {
-        this->view->printMessageLine(QString("\nGenerando reporte..."));
-
-        //calculate original centers using data and originalAssignments (Map<cluster, center>)
-        QMap<int, arma::Col<double>> clusterDictionary (calculateMeans(data, originalAssignments));
+        clusterDictionary = calculateMeans(data, originalAssignments);
+    }
 
 
-        //Create report for each point wrong classified
-        int wrongPoints = 0;
-        QList<QString> reportedPoints;
+    //Create report for each point wrong classified
+    int wrongPoints = 0;
+    QList<QString> reportedPoints;
 
-        QMap<int,int> equivalences(this->clusterEquivalences(clusterDictionary, centroids, metric));
+    if (testingMode) {
+
+        QMap<int,int> equivalences(this->clusterEquivalences(*clusterDictionary, centroids, metric));
         for (size_t col=0; col < data.n_cols; col++) {
             if (originalAssignments[col]!= equivalences.value(assignments[col])) {
                 wrongPoints++;
@@ -123,30 +123,31 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
                 message += "\t\tHa sido clasificado al cluster '" + QString::number(assignments[col]) + "', con centro en: \n";
                 message += "\n\t\t\t"+ pointToString(centroids, assignments[col]) + "\n\n";
                 message += "\t\tY debia ser clasificado al cluster '" + QString::number(originalAssignments[col]) + "', con centro en: \n";
-                message += "\n\t\t\t"+ colToString(clusterDictionary.value(originalAssignments[col])) + "\n";
+                message += "\n\t\t\t"+ colToString(clusterDictionary->value(originalAssignments[col])) + "\n";
                 reportedPoints.push_back(message);
             }
         }
 
-        std::ofstream report;
-        report.open(reportPath.toStdString().c_str());
-        report << "\n Resultados del clustering";
-        report << "\n *************************";
-        report << "\n\n Dataset: " + QString(directory+file).toStdString();
-        report << "\n Metrica utilizada: " << metricName;
+    }
+
+    std::ofstream report;
+    report.open(reportPath.toStdString().c_str());
+    report << "\n Resultados del clustering";
+    report << "\n *************************";
+    report << "\n\n Dataset: " + QString(directory+file).toStdString();
+    report << "\n Metrica utilizada: " << metricName;
+    if (testingMode) {
         report << "\n Puntos mal clasificados: " << wrongPoints << "\n\n";
         if (wrongPoints>0) {
             for (int i=0; i<reportedPoints.size(); i++) {
                 report << std::endl << reportedPoints.at(i).toStdString();
             }
         }
-
-        report << std::endl;
-
-       report.close();
-       this->view->printMessageLine(QString(QString("\nReporte almacenado en: ") + QString(reportPath)));
-
     }
+   report << std::endl;
+
+   report.close();
+   this->view->printMessageLine(QString(QString("\nReporte almacenado en: ") + QString(reportPath)));
 
 
     // Show Assignments
@@ -168,36 +169,36 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
 
 }
 
-QMap<int,arma::Col<double>> Controller::calculateMeans(arma::mat data, arma::Row<size_t> originalAssignments)
+QMap<int,arma::Col<double>> * Controller::calculateMeans(arma::mat data, arma::Row<size_t> originalAssignments)
 {
     QMap <int, size_t> points; //points per cluster
-    QMap<int,arma::Col<double>> result;
+    QMap<int,arma::Col<double>> * result = new QMap<int,arma::Col<double>>();
     for (size_t c=0; c < data.n_cols; c++) {
         int cluster = originalAssignments.at(c);
-        if (result.contains(cluster)) {
-            arma::Col<double> col (result.value(cluster));
-            result.remove(cluster);
+        if (result->contains(cluster)) {
+            arma::Col<double> col (result->value(cluster));
+            result->remove(cluster);
             int size = points.value(cluster);
             points.remove(cluster);
             points.insert(cluster, size+1);
             col = col + data.col(c);
-            result.insert(cluster, col);
+            result->insert(cluster, col);
         }else {
             points.insert(cluster, 1);
             arma::Col<double> newMean;
             newMean.zeros(data.n_rows);
             newMean = newMean + data.col(c);
-            result.insert(cluster, newMean);
+            result->insert(cluster, newMean);
         }
     }
 
-    QList<int> keys(result.keys());
+    QList<int> keys(result->keys());
     for (int i=0; i<keys.size(); i++) {
         int cluster = keys.at(i);
-        arma::Col<double> col (result.value(cluster));
-        result.remove(cluster);
+        arma::Col<double> col (result->value(cluster));
+        result->remove(cluster);
         col = col / points.value(cluster);
-        result.insert(cluster, col);
+        result->insert(cluster, col);
     }
 
     return result;

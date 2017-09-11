@@ -24,7 +24,7 @@ public:
 
 private:
    MainWindow * view;
-   QMap<int, arma::Col<double>> calculateMeans (arma::mat data, arma::Row<size_t> originalAssignments);
+   QMap<int, arma::Col<double>> * calculateMeans (arma::mat data, arma::Row<size_t> originalAssignments);
    arma::Row<double> getMean (arma::mat data, size_t startCol, size_t endCol);
    QString pointToString(arma::mat &data, size_t pointColumn);
    QString colToString(const arma::Col<double> &data);
