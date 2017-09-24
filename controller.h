@@ -27,6 +27,7 @@ private:
    QString colToString(const arma::Col<double> &data);
    QMap <int, int> clusterEquivalences(const QMap<int, arma::Col<double>> &originalCentroids, const arma::mat &newCentroids, int metric);
    double getDistance (const arma::Col<double> &pointA, const arma::Col<double> &pointB, int metric);
+   void saveToFile (const std::string &path, QMap<int, arma::Col<double>> * dictionary);
 };
 
 #endif // CONTROLLER_H

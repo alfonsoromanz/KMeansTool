@@ -28,6 +28,7 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
 
     QString assignmentsPath = directory + QString("assignments.txt");
     QString centroidsPath = directory + QString("centroids.txt");
+    QString originalCentroidsPath = directory + QString("original_centroids.txt");
     QString reportPath = directory + QString("report.txt");
 
 
@@ -95,11 +96,6 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
     this->view->printMessageLine(QString(QString("\nGuardando centroides en: ") + centroidsPath));
     data::Save(centroidsPath.toStdString(), centroids, true);
 
-    /*
-     * After Clustering: Report
-     */
-
-    this->view->printMessageLine(QString("\nGenerando reporte..."));
 
     //calculate original centers using data and originalAssignments (Map<cluster, center>)
     QMap<int, arma::Col<double>> * clusterDictionary = NULL;
@@ -107,6 +103,15 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
         clusterDictionary = calculateMeans(data, originalAssignments);
     }
 
+    //Save Original centroids
+    this->view->printMessageLine(QString(QString("\nGuardando centros originales en: ") + originalCentroidsPath));
+    this->saveToFile(originalCentroidsPath.toStdString(), clusterDictionary);
+
+    /*
+     * After Clustering: Report
+     */
+
+    this->view->printMessageLine(QString("\nGenerando reporte..."));
 
     //Create report for each point wrong classified
     int wrongPoints = 0;
@@ -283,4 +288,24 @@ double Controller::getDistance(const arma::Col<double> &pointA, const arma::Col<
         return metric.Evaluate(pointA, pointB);
     }
     return 0;
+}
+
+void Controller::saveToFile(const std::string &path, QMap<int, arma::Col<double> > *dictionary)
+{
+    QList<int> keys (dictionary->keys());
+    std::ofstream report;
+    report.open(path);
+    report << "# Centros originales: ";
+    report << std::endl;
+    for (size_t i=0; i<keys.size(); i++) {
+        int cluster = keys.at(i);
+        arma::Col<double> centroid (dictionary->value(cluster));
+        report << std::endl;
+        report << "# Cluster: " << cluster << std::endl;
+        report << colToString(centroid).toStdString();
+        report << std::endl;
+    }
+
+
+   report.close();
 }
