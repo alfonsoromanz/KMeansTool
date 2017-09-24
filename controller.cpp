@@ -101,11 +101,11 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
     QMap<int, arma::Col<double>> * clusterDictionary = NULL;
     if (testingMode) {
         clusterDictionary = calculateMeans(data, originalAssignments);
+        //Save Original centroids
+        this->view->printMessageLine(QString(QString("\nGuardando centros originales en: ") + originalCentroidsPath));
+        this->saveToFile(originalCentroidsPath.toStdString(), clusterDictionary);
     }
 
-    //Save Original centroids
-    this->view->printMessageLine(QString(QString("\nGuardando centros originales en: ") + originalCentroidsPath));
-    this->saveToFile(originalCentroidsPath.toStdString(), clusterDictionary);
 
     /*
      * After Clustering: Report
@@ -120,6 +120,15 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
     if (testingMode) {
 
         QMap<int,int> equivalences(this->clusterEquivalences(*clusterDictionary, centroids, metric));
+
+        /* Just for testing
+        std::cout << std::endl;
+        QList<int> keyss (equivalences.keys());
+        for (int i=0; i< keyss.size(); i++) {
+            std::cout << std::endl << keyss.at(i) << " :" << equivalences.value(keyss.at(i));
+        }*/
+
+        //
         for (size_t col=0; col < data.n_cols; col++) {
             if (originalAssignments[col]!= equivalences.value(assignments[col])) {
                 wrongPoints++;
