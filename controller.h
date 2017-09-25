@@ -3,6 +3,7 @@
 #include <mlpack/core.hpp>
 #include <cmath>
 #include <mlpack/methods/kmeans/kmeans.hpp>
+#include <mlpack/methods/kmeans/refined_start.hpp>
 #include <QMap>
 #include "fstream"
 #include <ctime>

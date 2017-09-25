@@ -70,18 +70,18 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
     if (metric == 1) {
 
         metricName = "Manhattan";
-        KMeans<ManhattanDistance> k_means(maxIterations);
+        KMeans<ManhattanDistance, RefinedStart, MaxVarianceNewCluster, NaiveKMeans, arma::mat> k_means(maxIterations);
         k_means.Cluster(data, k, assignments, centroids);
 
     } else if (metric == 0) {
 
         metricName = "Euclidean";
-        KMeans<EuclideanDistance> k_means(maxIterations);
+        KMeans<EuclideanDistance, RefinedStart, MaxVarianceNewCluster, NaiveKMeans, arma::mat> k_means(maxIterations);
         k_means.Cluster(data, k, assignments, centroids);
     } else {
 
         metricName = "Chebyshev";
-        KMeans<ChebyshevDistance> k_means(maxIterations);
+        KMeans<ChebyshevDistance, RefinedStart, MaxVarianceNewCluster, NaiveKMeans, arma::mat> k_means(maxIterations);
         k_means.Cluster(data, k, assignments, centroids);
     }
     auto end2 = std::chrono::high_resolution_clock::now();
