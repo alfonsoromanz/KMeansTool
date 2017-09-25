@@ -220,17 +220,6 @@
       <string>Parametros y configuraciones</string>
      </property>
     </widget>
-    <zorder>clustersBox</zorder>
-    <zorder>clustersBox</zorder>
-    <zorder>label_3</zorder>
-    <zorder>modeBox</zorder>
-    <zorder>label</zorder>
-    <zorder>toolButton</zorder>
-    <zorder>label_4</zorder>
-    <zorder>maxIterationsBox</zorder>
-    <zorder>metricsBox</zorder>
-    <zorder>label_2</zorder>
-    <zorder>label_5</zorder>
    </widget>
    <widget class="QPushButton" name="loadButton">
     <property name="geometry">
@@ -255,7 +244,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>No datasets loaded</string>
+     <string>Ningun Dataset cargado</string>
     </property>
    </widget>
   </widget>
@@ -274,7 +263,7 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>true</bool>
+    <bool>false</bool>
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>

@@ -21,9 +21,6 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
 
 
     arma::Row<size_t> originalAssignments;
-    std::cout << std::endl << directory.toStdString();
-    std::cout << std::endl << file.toStdString();
-
 
 
     QString assignmentsPath = directory + QString("assignments.txt");
@@ -31,11 +28,18 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
     QString originalCentroidsPath = directory + QString("original_centroids.txt");
     QString reportPath = directory + QString("report.txt");
 
+    long int pointsPerCluster[k];
+    for (int i=0; i<k; i++) {
+        pointsPerCluster[i]=0;
+    }
+
+    QMap<int, arma::Col<double>> * clusterDictionary = NULL;
 
     /*
      * Loads dataset in data Matrix
      */
     if (testingMode) {
+
         //Asume que la primer columna es el cluster
         data.zeros(dataset.n_rows-1, dataset.n_cols);
 
@@ -54,9 +58,20 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
         }
 
 
-        //data::Save("originales.txt", originalAssignments, true);
-        //data::Save("preprocesada.txt", data, true);
+        //calculate original centers using data and originalAssignments (Map<cluster, center>)
+        clusterDictionary = calculateMeans(data, originalAssignments);
 
+        if (clusterDictionary->keys().size() != k) {
+            for (int i=0; i<clusterDictionary->keys().size(); i++) {
+                std::cout << std::endl << clusterDictionary->keys().at(i);
+            }
+            QMessageBox messageBox;
+            std::string error = std::string("Nro. de clusters incorrecto. Para el dataset especificado debe agrupar en ") + std::to_string(clusterDictionary->keys().size()) + std::string(" clusters.");
+            messageBox.critical(0, "Error", error.c_str());
+            messageBox.setFixedSize(500,200);
+            this->view->clear();
+            return;
+        }
 
     }
 
@@ -97,10 +112,10 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
     data::Save(centroidsPath.toStdString(), centroids, true);
 
 
-    //calculate original centers using data and originalAssignments (Map<cluster, center>)
-    QMap<int, arma::Col<double>> * clusterDictionary = NULL;
+
+
     if (testingMode) {
-        clusterDictionary = calculateMeans(data, originalAssignments);
+
         //Save Original centroids
         this->view->printMessageLine(QString(QString("\nGuardando centros originales en: ") + originalCentroidsPath));
         this->saveToFile(originalCentroidsPath.toStdString(), clusterDictionary);
@@ -144,12 +159,22 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
 
     }
 
+    for (int i=0; i<assignments.n_elem; i++) {
+        pointsPerCluster[assignments[i]]++;
+    }
+
     std::ofstream report;
     report.open(reportPath.toStdString().c_str());
     report << "\n Resultados del clustering";
     report << "\n *************************";
     report << "\n\n Dataset: " + QString(directory+file).toStdString();
     report << "\n Metrica utilizada: " << metricName;
+    report << "\n Tiempo total: " << QString::number(std::chrono::duration_cast<std::chrono::nanoseconds>(end2-begin1).count()).toStdString() << " ns";
+    report << "\n Asignaciones: ";
+    for (int i=0; i<k; i++) {
+        report << "\n   Cluster " << i << ": " << pointsPerCluster[i] << " puntos";
+    }
+
     if (testingMode) {
         report << "\n Puntos mal clasificados: " << wrongPoints << "\n\n";
         if (wrongPoints>0) {
