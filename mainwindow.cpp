@@ -40,7 +40,7 @@ void MainWindow::setController(Controller * c) {
 
 void MainWindow::on_loadButton_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Load Dataset"), "./", tr("Text Files (*.txt *.csv)"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Cargar Dataset"), "./", tr("Archivos de texto (*.txt *.csv)"));
     if (fileName != NULL) {
         if (this->processDataset(fileName)) {
            this->ui->datasetLabel->setText(fileName);
@@ -79,6 +79,10 @@ bool MainWindow::processDataset(const QString &dataset)
         QMessageBox::warning(this, "ERROR", "Ocurrio un error al cargar el dataset");
         qApp->processEvents();
     }
+
+    DatasetGenerator generator;
+    generator.createDataset("centros.txt", 5, 10);
+
     return success;
 }
 

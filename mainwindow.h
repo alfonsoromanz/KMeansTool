@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QtWidgets>
 #include <QApplication>
+#include "datasetgenerator.h"
 
 namespace Ui {
 class MainWindow;
