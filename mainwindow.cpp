@@ -8,6 +8,7 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
     menu.addAction(createDataAction);
     menu.setTitle("&Archivo");
     menu.exec(event->globalPos());
+
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -139,4 +140,10 @@ void MainWindow::createMenu()
     fileMenu = menuBar()->addMenu(tr("&Archivo"));
     fileMenu->addAction(loadAction);
     fileMenu->addAction(createDataAction);
+
+    button = new QToolButton();
+    button->setText("Archivo  ");
+    button->setMenu(fileMenu);
+    button->setPopupMode(QToolButton::InstantPopup);
+    this->ui->mainToolBar->addWidget(button);
 }

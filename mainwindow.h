@@ -40,6 +40,7 @@ private:
     QMenu * fileMenu;
     QAction * loadAction;
     QAction * createDataAction;
+    QToolButton * button;
 
     bool datasetReady = false;
     QString datasetDir = "";
