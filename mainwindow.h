@@ -16,6 +16,11 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+protected:
+    #ifndef QT_NO_CONTEXTMENU
+        void contextMenuEvent(QContextMenuEvent *event) override;
+    #endif // QT_NO_CONTEXTMENU
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     void setController (Controller * c);
@@ -26,12 +31,15 @@ public:
 
 private slots:
     void on_loadButton_clicked();
-
     void on_runButton_clicked();
+    void create_dataset_clicked();
 
 private:
     Ui::MainWindow *ui;
     Controller * controller;
+    QMenu * fileMenu;
+    QAction * loadAction;
+    QAction * createDataAction;
 
     bool datasetReady = false;
     QString datasetDir = "";
@@ -43,6 +51,9 @@ private:
     QString getFileName (const QString & filePath);
 
     void changeCursor(Qt::CursorShape cursor, bool loadingFile);
+
+    void createActions();
+    void createMenu();
 };
 
 #endif // MAINWINDOW_H

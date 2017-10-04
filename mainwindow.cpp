@@ -1,6 +1,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+void MainWindow::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu menu(this);
+    menu.addAction(loadAction);
+    menu.addAction(createDataAction);
+    menu.setTitle("&Archivo");
+    menu.exec(event->globalPos());
+}
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -10,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->printMessageLine(QString("By Alfonso Román Zubeldia"));
     this->ui->plainTextEdit->setReadOnly(true);
     this->ui->runButton->setDisabled(true);
+    this->createActions();
+    this->createMenu();
 }
 
 void MainWindow::printMessage(const QString & message) {
@@ -64,6 +75,11 @@ void MainWindow::on_runButton_clicked()
     }
 }
 
+void MainWindow::create_dataset_clicked()
+{
+
+}
+
 bool MainWindow::processDataset(const QString &dataset)
 {
     bool success = 1;
@@ -80,8 +96,8 @@ bool MainWindow::processDataset(const QString &dataset)
         qApp->processEvents();
     }
 
-    DatasetGenerator generator;
-    generator.createDataset("centros.txt", 5, 10);
+    /*DatasetGenerator generator;
+    generator.createDataset("centros.txt", 15000, 50);*/
 
     return success;
 }
@@ -105,4 +121,22 @@ void MainWindow::changeCursor(Qt::CursorShape cursor, bool loadingFile)
     this->setCursor(cursor);
     this->ui->loadButton->setDisabled(loadingFile);
     qApp->processEvents();
+}
+
+void MainWindow::createActions()
+{
+    loadAction = new QAction(tr("&Cargar Dataset"), this);
+    loadAction->setStatusTip(tr("Carga un dataset para ejecutar K-Means"));
+    connect(loadAction, &QAction::triggered, this, &MainWindow::on_loadButton_clicked);
+
+    createDataAction = new QAction(tr("&Crear Dataset"), this);
+    createDataAction->setStatusTip(tr("Crea un nuevo dataset"));
+    connect (createDataAction, &QAction::triggered, this, &MainWindow::create_dataset_clicked);
+}
+
+void MainWindow::createMenu()
+{
+    fileMenu = menuBar()->addMenu(tr("&Archivo"));
+    fileMenu->addAction(loadAction);
+    fileMenu->addAction(createDataAction);
 }
