@@ -6,6 +6,7 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include "datasetgenerator.h"
+#include <QMessageBox>
 
 namespace Ui {
 class DatasetWindow;

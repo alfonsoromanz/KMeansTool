@@ -46,5 +46,12 @@ void DatasetWindow::on_generateButton_clicked()
     QString out = this->centersDir + "dataset_generado.txt";
     long long int pointsPerCluster = this->ui->pointsBox->value();
     long int error = this->ui->errorBox->value();
-    generator.createDataset (file, pointsPerCluster, error, out);
+    bool success = generator.createDataset (file, pointsPerCluster, error, out);
+
+    if (success) {
+        QString info = QString("El dataset ha sido almacenado en: ") + out;
+        QMessageBox::information(this, "Exito", info);
+    } else {
+        QMessageBox::warning(this, "ERROR", "Ocurrio un error al cargar el archivo");
+    }
 }
