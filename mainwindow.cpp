@@ -78,7 +78,8 @@ void MainWindow::on_runButton_clicked()
 
 void MainWindow::create_dataset_clicked()
 {
-
+    DatasetWindow * window = new DatasetWindow();
+    window->show();
 }
 
 bool MainWindow::processDataset(const QString &dataset)

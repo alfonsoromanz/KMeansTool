@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "controller.h"
+#include "datasetwindow.h"
 #include <QFile>
 #include <QtWidgets>
 #include <QApplication>

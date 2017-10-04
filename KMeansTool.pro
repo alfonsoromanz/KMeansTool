@@ -27,15 +27,18 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     controller.cpp \
-    datasetgenerator.cpp
+    datasetgenerator.cpp \
+    datasetwindow.cpp
 
 HEADERS += \
         mainwindow.h \
     controller.h \
-    datasetgenerator.h
+    datasetgenerator.h \
+    datasetwindow.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    datasetwindow.ui
 
 LIBS += -L /usr/include/ -lmlpack -larmadillo -lboost_serialization
 

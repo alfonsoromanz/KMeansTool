@@ -5,7 +5,7 @@ DatasetGenerator::DatasetGenerator()
 
 }
 
-bool DatasetGenerator::createDataset(const QString &centersFile, int pointsPerCluster, int error)
+bool DatasetGenerator::createDataset(const QString &centersFile, long long int pointsPerCluster, long int error, const QString &fileOut)
 {
     bool success = 1;
     arma::mat centers;
@@ -37,6 +37,6 @@ bool DatasetGenerator::createDataset(const QString &centersFile, int pointsPerCl
         }
     }
 
-    data::Save("generated.txt", dataset, true);
+    data::Save(fileOut.toStdString().c_str(), dataset, true);
     return 1;
 }
