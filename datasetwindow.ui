@@ -37,7 +37,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>...</string>
+     <string>?</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -45,12 +45,12 @@
      <rect>
       <x>20</x>
       <y>70</y>
-      <width>131</width>
+      <width>141</width>
       <height>17</height>
      </rect>
     </property>
     <property name="text">
-     <string>Archivo de centros:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Archivo de centros:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="centersLabel">
@@ -150,12 +150,12 @@
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>111</width>
+       <width>121</width>
        <height>17</height>
       </rect>
      </property>
      <property name="text">
-      <string>Nuevo Dataset</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Nuevo Dataset&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
    </widget>

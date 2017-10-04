@@ -152,6 +152,9 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
         pointsPerCluster[assignments[i]]++;
     }
 
+    int totalPoints = assignments.n_elem;
+    double accuracy = (totalPoints-wrongPoints) / totalPoints;
+
     std::ofstream report;
     report.open(reportPath.toStdString().c_str());
     report << "\n Resultados del clustering";
@@ -163,8 +166,9 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
     for (int i=0; i<k; i++) {
         report << "\n   Cluster " << i << ": " << pointsPerCluster[i] << " puntos";
     }
-
+    report << "\n Total de puntos: " << totalPoints;
     if (testingMode) {
+        report << "\n Precision: " << accuracy * 100 <<"%";
         report << "\n Puntos mal clasificados: " << wrongPoints << "\n\n";
         if (wrongPoints>0) {
             for (int i=0; i<reportedPoints.size(); i++) {
