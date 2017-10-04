@@ -16,8 +16,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->printMessage(QString("KMeansTool"));
-    this->printMessageLine(QString("By Alfonso Román Zubeldia"));
     this->ui->plainTextEdit->setReadOnly(true);
     this->ui->runButton->setDisabled(true);
     this->createActions();
@@ -71,7 +69,6 @@ void MainWindow::on_runButton_clicked()
         int max_iterations = this->ui->maxIterationsBox->value();
         int metric = this->ui->metricsBox->currentIndex();
         bool testingMode = this->ui->modeBox->currentIndex();
-        std::cout << std::endl << k << ", " << max_iterations << ", " << metric << std::endl;
         controller->runClustering(datasetMatrix, k, metric, max_iterations, this->datasetDir, this->datasetName, testingMode);
     }
 }
@@ -97,9 +94,6 @@ bool MainWindow::processDataset(const QString &dataset)
         QMessageBox::warning(this, "ERROR", "Ocurrio un error al cargar el dataset");
         qApp->processEvents();
     }
-
-    /*DatasetGenerator generator;
-    generator.createDataset("centros.txt", 15000, 50);*/
 
     return success;
 }

@@ -13,7 +13,5 @@ int main(int argc, char *argv[])
 
     w.setController(controller);
 
-
-
     return a.exec();
 }

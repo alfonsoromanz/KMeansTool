@@ -17,15 +17,12 @@ bool DatasetGenerator::createDataset(const QString &centersFile, long long int p
 
     arma::mat dataset;
     int n_clusters = centers.n_cols;
-    std::cout << std::endl << "NRO CLUSTERS: " << n_clusters;
     dataset.zeros(centers.n_rows+1, n_clusters * pointsPerCluster);
-    std::cout << std::endl << "NRO PUNTOS: " << dataset.n_cols;
 
     int rows = centers.n_rows+1;
     int cols = n_clusters * pointsPerCluster;
     for (int c=0; c<cols; c++) {
         int cluster = floor(c/pointsPerCluster);
-        std::cout << std::endl << "C: " << cluster;
         //set the label
         dataset(0,c)=cluster;
         //generate point

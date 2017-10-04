@@ -62,9 +62,6 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
         clusterDictionary = calculateMeans(data, originalAssignments);
 
         if (clusterDictionary->keys().size() != k) {
-            for (int i=0; i<clusterDictionary->keys().size(); i++) {
-                std::cout << std::endl << clusterDictionary->keys().at(i);
-            }
             QMessageBox messageBox;
             std::string error = std::string("Nro. de clusters incorrecto. Para el dataset especificado debe agrupar en ") + std::to_string(clusterDictionary->keys().size()) + std::string(" clusters.");
             messageBox.critical(0, "Error", error.c_str());
@@ -136,14 +133,6 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
 
         QMap<int,int> equivalences(this->clusterEquivalences(*clusterDictionary, centroids, metric));
 
-        /* Just for testing
-        std::cout << std::endl;
-        QList<int> keyss (equivalences.keys());
-        for (int i=0; i< keyss.size(); i++) {
-            std::cout << std::endl << keyss.at(i) << " :" << equivalences.value(keyss.at(i));
-        }*/
-
-        //
         for (size_t col=0; col < data.n_cols; col++) {
             if (originalAssignments[col]!= equivalences.value(assignments[col])) {
                 wrongPoints++;
@@ -188,23 +177,7 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
    report.close();
    this->view->printMessageLine(QString(QString("\nReporte almacenado en: ") + QString(reportPath)));
 
-
-    // Show Assignments
-    /*
-
-    for (size_t i = 0; i < assignments.n_elem; ++i)
-    {
-        std::cout << "El punto " << i << " se asigno al cluster: "
-                  << assignments[i] << ".\n";
-        view->printMessageLine(QString("El punto " + QString::number(i) + " se asigno al Cluster: " + QString::number(assignments[i])));
-    }*/
-
-
-
-
     auto end = std::chrono::high_resolution_clock::now();
-    std::cout << std::endl << "TIEMPO : "<< std::chrono::duration_cast<std::chrono::seconds>(end-begin).count() << " s" << std::endl;
-
 
 }
 
