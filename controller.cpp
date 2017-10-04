@@ -23,10 +23,10 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
     arma::Row<size_t> originalAssignments;
 
 
-    QString assignmentsPath = directory + QString("assignments.txt");
-    QString centroidsPath = directory + QString("centroids.txt");
-    QString originalCentroidsPath = directory + QString("original_centroids.txt");
-    QString reportPath = directory + QString("report.txt");
+    QString assignmentsPath = directory + QString("asignaciones_clustering.txt");
+    QString centroidsPath = directory + QString("centros_calculados.txt");
+    QString originalCentroidsPath = directory + QString("centros_originales.txt");
+    QString reportPath = directory + QString("reporte_clustering.txt");
 
     long int pointsPerCluster[k];
     for (int i=0; i<k; i++) {
