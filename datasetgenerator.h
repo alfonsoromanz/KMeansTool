@@ -12,7 +12,7 @@ class DatasetGenerator
 {
 public:
     DatasetGenerator();
-    bool createDataset (const QString &centersFile, long long int pointsPerCluster, long int error, const QString &fileOut);
+    bool createDataset (const QString &centersFile, long long int pointsPerCluster, long int error, bool gaussian, QString &fileOut);
 };
 
 #endif // DATASETGENERATOR_H

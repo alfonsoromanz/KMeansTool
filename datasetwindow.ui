@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>568</width>
+    <width>633</width>
     <height>313</height>
    </rect>
   </property>
@@ -71,7 +71,7 @@
      <rect>
       <x>10</x>
       <y>100</y>
-      <width>481</width>
+      <width>591</width>
       <height>101</height>
      </rect>
     </property>
@@ -84,7 +84,7 @@
     <widget class="QSpinBox" name="pointsBox">
      <property name="geometry">
       <rect>
-       <x>40</x>
+       <x>220</x>
        <y>60</y>
        <width>101</width>
        <height>26</height>
@@ -97,13 +97,13 @@
       <number>100000</number>
      </property>
      <property name="value">
-      <number>25000</number>
+      <number>10000</number>
      </property>
     </widget>
     <widget class="QSpinBox" name="errorBox">
      <property name="geometry">
       <rect>
-       <x>270</x>
+       <x>400</x>
        <y>60</y>
        <width>71</width>
        <height>26</height>
@@ -122,7 +122,7 @@
     <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
-       <x>40</x>
+       <x>220</x>
        <y>40</y>
        <width>131</width>
        <height>17</height>
@@ -132,17 +132,17 @@
       <string>Puntos por cluster</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_4">
+    <widget class="QLabel" name="label_stddev">
      <property name="geometry">
       <rect>
-       <x>270</x>
+       <x>400</x>
        <y>40</y>
        <width>171</width>
        <height>17</height>
       </rect>
      </property>
      <property name="text">
-      <string>Dispersion en cada eje</string>
+      <string>Desvío Estándar</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_5">
@@ -156,6 +156,39 @@
      </property>
      <property name="text">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Nuevo Dataset&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>60</y>
+       <width>101</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>Normal</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Uniforme</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>40</y>
+       <width>91</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Distribución</string>
      </property>
     </widget>
    </widget>
@@ -178,7 +211,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>568</width>
+     <width>633</width>
      <height>22</height>
     </rect>
    </property>

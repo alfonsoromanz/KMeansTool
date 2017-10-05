@@ -53,9 +53,9 @@ void MainWindow::on_loadButton_clicked()
     QString fileName = QFileDialog::getOpenFileName(this, tr("Cargar Dataset"), "./", tr("Archivos de texto (*.txt *.csv)"));
     if (fileName != NULL) {
         if (this->processDataset(fileName)) {
-           this->ui->datasetLabel->setText(fileName);
            this->datasetDir = this->getDirectory(fileName);
            this->datasetName = this->getFileName(fileName);
+           this->ui->datasetLabel->setText(this->datasetName);
            this->datasetReady = true;
            this->ui->runButton->setDisabled(false);
         }

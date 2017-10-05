@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>585</width>
-    <height>584</height>
+    <height>615</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>10</x>
       <y>290</y>
       <width>551</width>
-      <height>241</height>
+      <height>261</height>
      </rect>
     </property>
    </widget>
@@ -81,7 +81,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Max. Iteraciones</string>
+      <string>Máx. Iteraciones</string>
      </property>
     </widget>
     <widget class="QComboBox" name="modeBox">
@@ -217,7 +217,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Parametros y configuraciones</string>
+      <string>Parámetros y configuraciones</string>
      </property>
     </widget>
    </widget>
@@ -244,7 +244,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Ningun Dataset cargado</string>
+     <string>Ningún Dataset cargado</string>
     </property>
    </widget>
   </widget>

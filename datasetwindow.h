@@ -25,6 +25,8 @@ private slots:
 
     void on_generateButton_clicked();
 
+    void on_comboBox_currentIndexChanged(int index);
+
 private:
     Ui::DatasetWindow *ui;
 
@@ -33,6 +35,7 @@ private:
 
     QString getDirectory (const QString & filePath);
     QString getFileName (const QString & filePath);
+    void changeCursor(Qt::CursorShape cursor, bool loadingFile);
 };
 
 #endif // DATASETWINDOW_H

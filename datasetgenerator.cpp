@@ -5,17 +5,17 @@ DatasetGenerator::DatasetGenerator()
 
 }
 
-bool DatasetGenerator::createDataset(const QString &centersFile, long long int pointsPerCluster, long int error, const QString &fileOut)
+bool DatasetGenerator::createDataset(const QString &centersFile, long long int pointsPerCluster, long int error, bool gaussian, QString &fileOut)
 {
     bool success = 1;
-    arma::mat centers;
+    arma::imat centers;
     success = data::Load(centersFile.toStdString().c_str(), centers, false);
 
     if (!success) {
         return 0;
     }
 
-    arma::mat dataset;
+    arma::imat dataset;
     int n_clusters = centers.n_cols;
     dataset.zeros(centers.n_rows+1, n_clusters * pointsPerCluster);
 
@@ -29,10 +29,18 @@ bool DatasetGenerator::createDataset(const QString &centersFile, long long int p
         for (int r=1; r<rows; r++) {
             std::random_device rd;
             std::default_random_engine generator(rd());
-            std::uniform_real_distribution<float> distribution(centers(r-1,cluster)-error, centers(r-1,cluster)+error);
-            dataset(r, c) = (int) distribution(generator);
+            if (gaussian) {
+                std::normal_distribution<> distribution(centers(r-1,cluster), error);
+                dataset(r, c) = distribution(generator);
+            } else {
+                std::uniform_int_distribution<> distribution(centers(r-1,cluster)-error, centers(r-1,cluster)+error);
+                dataset(r, c) = distribution(generator);
+            }
         }
     }
+    //add prefix
+    QString prefix = gaussian ? "_normal.txt" : "_uniforme.txt";
+    fileOut = fileOut + prefix;
 
     data::Save(fileOut.toStdString().c_str(), dataset, true);
     return 1;
