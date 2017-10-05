@@ -98,6 +98,7 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
     }
     auto end2 = std::chrono::high_resolution_clock::now();
 
+    this->view->clear();
     this->view->printMessageLine(QString("\nClustering Finalizado. Tiempo: " + QString::number(std::chrono::duration_cast<std::chrono::nanoseconds>(end2-begin1).count()) + " ns  (" + QString::number(std::chrono::duration_cast<std::chrono::seconds>(end2-begin1).count()) + " s)."));
 
     //Save assignments
