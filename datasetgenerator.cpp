@@ -21,12 +21,12 @@ bool DatasetGenerator::createDataset(const QString &centersFile, long long int p
 
     int rows = centers.n_rows+1;
     int cols = n_clusters * pointsPerCluster;
-    for (int c=0; c<cols; c++) {
+    for (long int c=0; c<cols; c++) {
         int cluster = floor(c/pointsPerCluster);
         //set the label
         dataset(0,c)=cluster;
         //generate point
-        for (int r=1; r<rows; r++) {
+        for (long int r=1; r<rows; r++) {
             std::random_device rd;
             std::default_random_engine generator(rd());
             if (gaussian) {
@@ -38,10 +38,25 @@ bool DatasetGenerator::createDataset(const QString &centersFile, long long int p
             }
         }
     }
+    //test
+    QString file (fileOut);
+
     //add prefix
     QString prefix = gaussian ? "_normal.txt" : "_uniforme.txt";
     fileOut = fileOut + prefix;
 
     data::Save(fileOut.toStdString().c_str(), dataset, true);
+
+    arma::imat newmat;
+    newmat.zeros(dataset.n_rows-1, dataset.n_cols);
+    for (long int i=0; i<newmat.n_rows; i++) {
+        for (long int j=0; j<newmat.n_cols; j++) {
+            newmat(i,j) = dataset(i+1, j);
+        }
+    }
+
+    prefix = gaussian ? "_normal_sin_label.txt" : "_uniforme_sin_label.txt";
+    file = file + prefix;
+    data::Save(file.toStdString().c_str(), newmat, true);
     return 1;
 }
