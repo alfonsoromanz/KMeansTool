@@ -62,8 +62,14 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
         clusterDictionary = calculateMeans(data, originalAssignments);
 
         if (clusterDictionary->keys().size() != k) {
+            int difference = abs(clusterDictionary->keys().size()-k);
+            std::string error;
+            if (difference > 20) {
+                error = std::string("Para ejecutar un Test de Clustering, el dataset debe contener las etiquetas en la primer columna. \n\nSi el archivo ya contiene las etiquetas, revise el Nro. de Clusters especificado.");
+            } else {
+                error = std::string("Nro. de clusters incorrecto. Para el dataset especificado debe agrupar en ") + std::to_string(clusterDictionary->keys().size()) + std::string(" clusters.");
+            }
             QMessageBox messageBox;
-            std::string error = std::string("Nro. de clusters incorrecto. Para el dataset especificado debe agrupar en ") + std::to_string(clusterDictionary->keys().size()) + std::string(" clusters.");
             messageBox.critical(0, "Error", error.c_str());
             messageBox.setFixedSize(500,200);
             this->view->clear();
