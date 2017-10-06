@@ -40,5 +40,9 @@ FORMS += \
         mainwindow.ui \
     datasetwindow.ui
 
+RESOURCES += \
+    resources/res.qrc
+
+
 LIBS += -L /usr/include/ -lmlpack -larmadillo -lboost_serialization
 

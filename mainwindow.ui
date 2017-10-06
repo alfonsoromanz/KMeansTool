@@ -13,6 +13,17 @@
   <property name="windowTitle">
    <string>KMeansTool</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="resources/res.qrc">
+    <normaloff>:/icono.jpg</normaloff>
+    <normalon>:/icono.jpg</normalon>:/icono.jpg</iconset>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>24</width>
+    <height>24</height>
+   </size>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QPlainTextEdit" name="plainTextEdit">
     <property name="geometry">
@@ -269,6 +280,8 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="resources/res.qrc"/>
+ </resources>
  <connections/>
 </ui>
