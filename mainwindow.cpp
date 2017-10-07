@@ -140,3 +140,9 @@ void MainWindow::createMenu()
     button->setPopupMode(QToolButton::InstantPopup);
     this->ui->mainToolBar->addWidget(button);
 }
+
+void MainWindow::on_helpButton_clicked()
+{
+    QString info = QString("\nEl modo de ejecución \"Descubrir Clusters\" permite ejecutar el algoritmo K-Means sobre bases de datos sin etiquetas de cluster (con la distribución de los puntos a su cluster desconocida). \n\nEl modo de ejecución \"Test de Clustering\" sólo está disponible para aquellas bases de datos que contengan la etiqueta de asignación de cada punto a su cluster (En la primer columna). Luego del agrupamiento, se evaluarán las asignaciones y se generará un reporte con los puntos mal clasificados.\n");
+    QMessageBox::information(this, "Ayuda", info);
+}

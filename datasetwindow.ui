@@ -27,7 +27,7 @@
      <string>Cargar Archivo</string>
     </property>
    </widget>
-   <widget class="QToolButton" name="toolButton">
+   <widget class="QToolButton" name="helpButton">
     <property name="geometry">
      <rect>
       <x>170</x>

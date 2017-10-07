@@ -35,6 +35,8 @@ private slots:
     void on_runButton_clicked();
     void create_dataset_clicked();
 
+    void on_helpButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     Clusterer * clusterer;

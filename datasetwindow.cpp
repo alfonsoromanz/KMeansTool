@@ -75,3 +75,9 @@ void DatasetWindow::on_comboBox_currentIndexChanged(int index)
     }
     qApp->processEvents();
 }
+
+void DatasetWindow::on_helpButton_clicked()
+{
+    QString info = QString("\nEl generador de datasets permite crear un dataset a partir de un archivo que contenga los centros. \n\nSe permite la carga de archivos en formato txt o csv con cualquier cantidad de centros y cualquier cantidad de dimensiones.");
+    QMessageBox::information(this, "Ayuda", info);
+}

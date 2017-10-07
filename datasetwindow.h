@@ -27,6 +27,8 @@ private slots:
 
     void on_comboBox_currentIndexChanged(int index);
 
+    void on_helpButton_clicked();
+
 private:
     Ui::DatasetWindow *ui;
 
