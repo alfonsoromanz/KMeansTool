@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
     w.show();
 
     Controller * controller = new Controller(&w);
+    //controller->createFiles();
 
     w.setController(controller);
 

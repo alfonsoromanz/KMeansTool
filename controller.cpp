@@ -7,6 +7,31 @@ Controller::Controller(MainWindow * w)
     view = w;
 }
 
+void Controller::createFiles() {
+    arma::imat dataset;
+
+    long int row =32;
+    for (int corrida=0; corrida<6; corrida++) {
+        dataset.zeros(row, 2);
+        for (long int j=0; j<dataset.n_cols; j++) {
+            for (long int i=0; i<dataset.n_rows; i++) {
+                if (j==0) {
+                    dataset(i,j) = 500;
+                } else {
+                    if (i==0) {
+                        dataset(i,j) = 600;
+                    } else {
+                        dataset(i,j) = 510;
+                    }
+                }
+            }
+        }
+        QString name = QString("dataset_") + QString::number(row) + QString(".txt");
+        data::Save(name.toStdString().c_str(), dataset, true);
+        row=row*4;
+    }
+
+}
 
 void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, int maxIterations, const QString &directory, const QString &file, bool testingMode) {
     view->clear();
@@ -160,8 +185,7 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
     }
 
     int totalPoints = assignments.n_elem;
-    double accuracy = (totalPoints-wrongPoints) / totalPoints;
-
+    double accuracy = double(double(totalPoints-wrongPoints) / double(totalPoints));
     std::ofstream report;
     report.open(reportPath.toStdString().c_str());
     report << "\n Resultados del clustering";
@@ -175,7 +199,7 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
     }
     report << "\n Total de puntos: " << totalPoints;
     if (testingMode) {
-        report << "\n Precision: " << accuracy * 100 <<"%";
+        report << "\n Precision: " << std::fixed <<std::setprecision(5) << accuracy;
         report << "\n Puntos mal clasificados: " << wrongPoints << "\n\n";
         if (wrongPoints>0) {
             for (int i=0; i<reportedPoints.size(); i++) {

@@ -69,7 +69,7 @@ void DatasetWindow::on_generateButton_clicked()
 void DatasetWindow::on_comboBox_currentIndexChanged(int index)
 {
     if (index==0) {
-        this->ui->label_stddev->setText("Desvío Estándar");
+        this->ui->label_stddev->setText("Varianza");
     } else {
         this->ui->label_stddev->setText("Dispersión en cada eje");
     }

@@ -18,19 +18,20 @@ bool DatasetGenerator::createDataset(const QString &centersFile, long long int p
     arma::imat dataset;
     int n_clusters = centers.n_cols;
     dataset.zeros(centers.n_rows+1, n_clusters * pointsPerCluster);
+    double stddev = sqrt(error);
 
     int rows = centers.n_rows+1;
     int cols = n_clusters * pointsPerCluster;
+    std::random_device rd;
+    std::default_random_engine generator(rd());
     for (long int c=0; c<cols; c++) {
         int cluster = floor(c/pointsPerCluster);
         //set the label
         dataset(0,c)=cluster;
         //generate point
         for (long int r=1; r<rows; r++) {
-            std::random_device rd;
-            std::default_random_engine generator(rd());
             if (gaussian) {
-                std::normal_distribution<> distribution(centers(r-1,cluster), error);
+                std::normal_distribution<> distribution(centers(r-1,cluster), stddev);
                 dataset(r, c) = distribution(generator);
             } else {
                 std::uniform_int_distribution<> distribution(centers(r-1,cluster)-error, centers(r-1,cluster)+error);

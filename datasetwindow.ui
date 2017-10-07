@@ -142,7 +142,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Desvío Estándar</string>
+      <string>Varianza</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_5">

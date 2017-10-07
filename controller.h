@@ -20,6 +20,7 @@ public:
     Controller(MainWindow * w);
     void runClustering (arma::mat &dataset, const size_t clusters, int metric, int maxIterations, const QString &directory, const QString &file, bool testingMode);
 
+    void createFiles();
 private:
    MainWindow * view;
    QMap<int, arma::Col<double>> * calculateMeans (arma::mat data, arma::Row<size_t> originalAssignments);
