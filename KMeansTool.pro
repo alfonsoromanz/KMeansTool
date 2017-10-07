@@ -26,15 +26,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    controller.cpp \
     datasetgenerator.cpp \
-    datasetwindow.cpp
+    datasetwindow.cpp \
+    clusterer.cpp
 
 HEADERS += \
         mainwindow.h \
-    controller.h \
     datasetgenerator.h \
-    datasetwindow.h
+    datasetwindow.h \
+    clusterer.h
 
 FORMS += \
         mainwindow.ui \

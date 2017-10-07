@@ -14,10 +14,10 @@ using namespace mlpack;
 using namespace mlpack::kmeans;
 using namespace mlpack::metric;
 
-class Controller
+class Clusterer
 {
 public:
-    Controller(MainWindow * w);
+    Clusterer(MainWindow * w);
     void runClustering (arma::mat &dataset, const size_t clusters, int metric, int maxIterations, const QString &directory, const QString &file, bool testingMode);
 
     void createFiles();

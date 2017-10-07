@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "controller.h"
+#include "clusterer.h"
 #include "datasetwindow.h"
 #include <QFile>
 #include <QtWidgets>
@@ -24,7 +24,7 @@ protected:
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-    void setController (Controller * c);
+    void setClusterer (Clusterer * c);
     void printMessage (const QString & message);
     void printMessageLine(const QString & message);
     void clear();
@@ -37,7 +37,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    Controller * controller;
+    Clusterer * clusterer;
     QMenu * fileMenu;
     QAction * loadAction;
     QAction * createDataAction;

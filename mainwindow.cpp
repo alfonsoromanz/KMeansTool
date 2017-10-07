@@ -42,10 +42,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::setController(Controller * c) {
-    controller = c;
-
-
+void MainWindow::setClusterer(Clusterer * c) {
+    clusterer = c;
 }
 
 void MainWindow::on_loadButton_clicked()
@@ -69,7 +67,7 @@ void MainWindow::on_runButton_clicked()
         int max_iterations = this->ui->maxIterationsBox->value();
         int metric = this->ui->metricsBox->currentIndex();
         bool testingMode = this->ui->modeBox->currentIndex();
-        controller->runClustering(datasetMatrix, k, metric, max_iterations, this->datasetDir, this->datasetName, testingMode);
+        clusterer->runClustering(datasetMatrix, k, metric, max_iterations, this->datasetDir, this->datasetName, testingMode);
     }
 }
 

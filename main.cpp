@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "controller.h"
+#include "clusterer.h"
 #include <QApplication>
 
 
@@ -10,10 +10,10 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    Controller * controller = new Controller(&w);
+    Clusterer * clusterer = new Clusterer(&w);
     //controller->createFiles();
 
-    w.setController(controller);
+    w.setClusterer(clusterer);
 
     return a.exec();
 }

@@ -1,13 +1,13 @@
-#include "controller.h"
+#include "clusterer.h"
 #include "mainwindow.h"
 
 
-Controller::Controller(MainWindow * w)
+Clusterer::Clusterer(MainWindow * w)
 {
     view = w;
 }
 
-void Controller::createFiles() {
+void Clusterer::createFiles() {
     arma::imat dataset;
 
     long int row =32;
@@ -33,7 +33,7 @@ void Controller::createFiles() {
 
 }
 
-void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, int maxIterations, const QString &directory, const QString &file, bool testingMode) {
+void Clusterer::runClustering (arma::mat &dataset, const size_t k, int metric, int maxIterations, const QString &directory, const QString &file, bool testingMode) {
     view->clear();
     view->printMessageLine("Ejecutando clustering...");
 
@@ -216,7 +216,7 @@ void Controller::runClustering (arma::mat &dataset, const size_t k, int metric, 
 
 }
 
-QMap<int,arma::Col<double>> * Controller::calculateMeans(arma::mat data, arma::Row<size_t> originalAssignments)
+QMap<int,arma::Col<double>> * Clusterer::calculateMeans(arma::mat data, arma::Row<size_t> originalAssignments)
 {
     QMap <int, size_t> points; //points per cluster
     QMap<int,arma::Col<double>> * result = new QMap<int,arma::Col<double>>();
@@ -252,7 +252,7 @@ QMap<int,arma::Col<double>> * Controller::calculateMeans(arma::mat data, arma::R
 
 }
 
-arma::Row<double> Controller::getMean(arma::mat data,size_t startCol, size_t endCol)
+arma::Row<double> Clusterer::getMean(arma::mat data,size_t startCol, size_t endCol)
 {
     arma::Row<double> result;
     size_t dim = data.n_rows;
@@ -275,7 +275,7 @@ arma::Row<double> Controller::getMean(arma::mat data,size_t startCol, size_t end
 
 
 
-QString Controller::pointToString(arma::mat &data, size_t pointColumn)
+QString Clusterer::pointToString(arma::mat &data, size_t pointColumn)
 {
     QString result;
     result = "";
@@ -285,7 +285,7 @@ QString Controller::pointToString(arma::mat &data, size_t pointColumn)
     return result;
 }
 
-QString Controller::colToString(const arma::Col<double> &data)
+QString Clusterer::colToString(const arma::Col<double> &data)
 {
     QString result;
     result = "";
@@ -295,7 +295,7 @@ QString Controller::colToString(const arma::Col<double> &data)
     return result;
 }
 
-QMap<int, int> Controller::clusterEquivalences(const QMap<int, arma::Col<double>> &originalCentroids, const arma::mat &newCentroids, int metric)
+QMap<int, int> Clusterer::clusterEquivalences(const QMap<int, arma::Col<double>> &originalCentroids, const arma::mat &newCentroids, int metric)
 {
     QMap<int,int> result;
     QList<int> keys(originalCentroids.keys());
@@ -317,7 +317,7 @@ QMap<int, int> Controller::clusterEquivalences(const QMap<int, arma::Col<double>
     return result;
 }
 
-double Controller::getDistance(const arma::Col<double> &pointA, const arma::Col<double> &pointB, int metric)
+double Clusterer::getDistance(const arma::Col<double> &pointA, const arma::Col<double> &pointB, int metric)
 {
     if (metric==1) {
         ManhattanDistance metric;
@@ -332,7 +332,7 @@ double Controller::getDistance(const arma::Col<double> &pointA, const arma::Col<
     return 0;
 }
 
-void Controller::saveToFile(const std::string &path, QMap<int, arma::Col<double> > *dictionary)
+void Clusterer::saveToFile(const std::string &path, QMap<int, arma::Col<double> > *dictionary)
 {
     QList<int> keys (dictionary->keys());
     std::ofstream report;
