@@ -199,7 +199,7 @@ void Clusterer::runClustering (arma::mat &dataset, const size_t k, int metric, i
     }
     report << "\n Total de puntos: " << totalPoints;
     if (testingMode) {
-        report << "\n Precision: " << std::fixed <<std::setprecision(5) << accuracy;
+        report << "\n Precision: " << std::fixed <<std::setprecision(5) << double(accuracy*100) <<"%";
         report << "\n Puntos mal clasificados: " << wrongPoints << "\n\n";
         if (wrongPoints>0) {
             for (int i=0; i<reportedPoints.size(); i++) {
