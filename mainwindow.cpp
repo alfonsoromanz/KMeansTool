@@ -67,7 +67,15 @@ void MainWindow::on_runButton_clicked()
         int max_iterations = this->ui->maxIterationsBox->value();
         int metric = this->ui->metricsBox->currentIndex();
         bool testingMode = this->ui->modeBox->currentIndex();
-        clusterer->runClustering(datasetMatrix, k, metric, max_iterations, this->datasetDir, this->datasetName, testingMode);
+
+        Clusterer * clusterer = new Clusterer(datasetMatrix, k, metric, max_iterations, this->datasetDir, this->datasetName, testingMode);
+        QThread * thread = new QThread;
+        clusterer->moveToThread(thread);
+        connect (clusterer, SIGNAL (finished(QString,bool)), this, SLOT(handleResult(QString, bool)));
+        connect (thread, SIGNAL(started()), clusterer, SLOT(runClustering()));
+        this->ui->runButton->setDisabled(true);
+        this->clear();
+        thread->start();
     }
 }
 
@@ -145,4 +153,15 @@ void MainWindow::on_helpButton_clicked()
 {
     QString info = QString("\nEl modo de ejecución \"Descubrir Clusters\" permite ejecutar el algoritmo K-Means sobre bases de datos sin etiquetas de cluster (con la distribución de los puntos a su cluster desconocida). \n\nEl modo de ejecución \"Test de Clustering\" sólo está disponible para aquellas bases de datos que contengan la etiqueta de asignación de cada punto a su cluster (En la primer columna). Luego del agrupamiento, se evaluarán las asignaciones y se generará un reporte con los puntos mal clasificados.\n");
     QMessageBox::information(this, "Ayuda", info);
+}
+
+void MainWindow::handleResult(QString message, bool success)
+{
+    this->clear();
+    if (!success) {
+       message="Ocurrio un error.";
+    }
+    this->printMessageLine(message);
+    this->ui->runButton->setDisabled(false);
+    qApp->processEvents();
 }

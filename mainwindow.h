@@ -37,6 +37,8 @@ private slots:
 
     void on_helpButton_clicked();
 
+    void handleResult(QString message, bool success);
+
 private:
     Ui::MainWindow *ui;
     Clusterer * clusterer;

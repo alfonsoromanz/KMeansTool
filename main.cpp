@@ -10,10 +10,5 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    Clusterer * clusterer = new Clusterer(&w);
-    //controller->createFiles();
-
-    w.setClusterer(clusterer);
-
     return a.exec();
 }

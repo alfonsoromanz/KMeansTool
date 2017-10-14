@@ -2,10 +2,18 @@
 #include "mainwindow.h"
 
 
-Clusterer::Clusterer(MainWindow * w)
+Clusterer::Clusterer(arma::mat &dataset, const size_t clusters, int metric, int maxIterations, const QString &directory, const QString &file, bool testingMode)
 {
-    view = w;
+    this->dataset = dataset;
+    this->clusters=clusters;
+    this->metric = metric;
+    this->maxIterations = maxIterations;
+    this->directory = directory;
+    this->file = file;
+    this->testingMode = testingMode;
 }
+
+
 
 void Clusterer::createFiles() {
     arma::imat dataset;
@@ -33,10 +41,12 @@ void Clusterer::createFiles() {
 
 }
 
-void Clusterer::runClustering (arma::mat &dataset, const size_t k, int metric, int maxIterations, const QString &directory, const QString &file, bool testingMode) {
-    view->clear();
-    view->printMessageLine("Ejecutando clustering...");
-
+void Clusterer::runClustering () {
+    QString result;
+    QProgressBar progress;
+    progress.setMaximum(100);
+    progress.setValue(100);
+    progress.show();
     auto begin = std::chrono::high_resolution_clock::now();
     arma::mat data(dataset); // Will save all the vectors
 
@@ -52,6 +62,8 @@ void Clusterer::runClustering (arma::mat &dataset, const size_t k, int metric, i
     QString centroidsPath = directory + QString("centros_calculados.txt");
     QString originalCentroidsPath = directory + QString("centros_originales.txt");
     QString reportPath = directory + QString("reporte_clustering.txt");
+
+    int k = clusters;
 
     long int pointsPerCluster[k];
     for (int i=0; i<k; i++) {
@@ -97,7 +109,8 @@ void Clusterer::runClustering (arma::mat &dataset, const size_t k, int metric, i
             QMessageBox messageBox;
             messageBox.critical(0, "Error", error.c_str());
             messageBox.setFixedSize(500,200);
-            this->view->clear();
+            progress.hide();
+            emit finished("", false);
             return;
         }
 
@@ -129,15 +142,15 @@ void Clusterer::runClustering (arma::mat &dataset, const size_t k, int metric, i
     }
     auto end2 = std::chrono::high_resolution_clock::now();
 
-    this->view->clear();
-    this->view->printMessageLine(QString("\nClustering Finalizado. Tiempo: " + QString::number(std::chrono::duration_cast<std::chrono::nanoseconds>(end2-begin1).count()) + " ns  (" + QString::number(std::chrono::duration_cast<std::chrono::seconds>(end2-begin1).count()) + " s)."));
+
+    result.append(QString("\n\nClustering Finalizado. Tiempo: " + QString::number(std::chrono::duration_cast<std::chrono::nanoseconds>(end2-begin1).count()) + " ns  (" + QString::number(std::chrono::duration_cast<std::chrono::seconds>(end2-begin1).count()) + " s)."));
 
     //Save assignments
-    this->view->printMessageLine(QString(QString("\nGuardando asignaciones en: ") + assignmentsPath));
+    result.append(QString(QString("\n\nGuardando asignaciones en: ") + assignmentsPath));
     data::Save(assignmentsPath.toStdString(), assignments, true);
 
     //Save centroids
-    this->view->printMessageLine(QString(QString("\nGuardando centroides en: ") + centroidsPath));
+    result.append(QString(QString("\n\nGuardando centroides en: ") + centroidsPath));
     data::Save(centroidsPath.toStdString(), centroids, true);
 
 
@@ -146,7 +159,7 @@ void Clusterer::runClustering (arma::mat &dataset, const size_t k, int metric, i
     if (testingMode) {
 
         //Save Original centroids
-        this->view->printMessageLine(QString(QString("\nGuardando centros originales en: ") + originalCentroidsPath));
+        result.append(QString(QString("\n\nGuardando centros originales en: ") + originalCentroidsPath));
         this->saveToFile(originalCentroidsPath.toStdString(), clusterDictionary);
     }
 
@@ -155,7 +168,7 @@ void Clusterer::runClustering (arma::mat &dataset, const size_t k, int metric, i
      * After Clustering: Report
      */
 
-    this->view->printMessageLine(QString("\nGenerando reporte..."));
+    result.append(QString("\n\nGenerando reporte..."));
 
     //Create report for each point wrong classified
     int wrongPoints = 0;
@@ -210,9 +223,12 @@ void Clusterer::runClustering (arma::mat &dataset, const size_t k, int metric, i
    report << std::endl;
 
    report.close();
-   this->view->printMessageLine(QString(QString("\nReporte almacenado en: ") + QString(reportPath)));
+   result.append(QString(QString("\n\nReporte almacenado en: ") + QString(reportPath)));
 
     auto end = std::chrono::high_resolution_clock::now();
+
+    progress.hide();
+    emit finished(result, true);
 
 }
 
