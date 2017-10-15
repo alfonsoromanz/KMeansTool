@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->runButton->setDisabled(true);
     this->createActions();
     this->createMenu();
+    this->ui->progressBar->hide();
 }
 
 void MainWindow::printMessage(const QString & message) {
@@ -68,13 +69,16 @@ void MainWindow::on_runButton_clicked()
         int metric = this->ui->metricsBox->currentIndex();
         bool testingMode = this->ui->modeBox->currentIndex();
 
-        Clusterer * clusterer = new Clusterer(datasetMatrix, k, metric, max_iterations, this->datasetDir, this->datasetName, testingMode);
+
+        Clusterer * clusterer = new Clusterer(datasetMatrix, k, metric, max_iterations, this->datasetDir, this->datasetName, this->ui->progressBar ,testingMode);
         QThread * thread = new QThread;
         clusterer->moveToThread(thread);
         connect (clusterer, SIGNAL (finished(QString,bool)), this, SLOT(handleResult(QString, bool)));
         connect (thread, SIGNAL(started()), clusterer, SLOT(runClustering()));
         this->ui->runButton->setDisabled(true);
         this->clear();
+        this->printMessageLine("Ejecutando Clustering...");
+
         thread->start();
     }
 }
@@ -159,7 +163,9 @@ void MainWindow::handleResult(QString message, bool success)
 {
     this->clear();
     if (!success) {
-       message="Ocurrio un error.";
+        QMessageBox messageBox;
+        messageBox.critical(0, "Error", message.toStdString().c_str());
+        messageBox.setFixedSize(500,200);
     }
     this->printMessageLine(message);
     this->ui->runButton->setDisabled(false);

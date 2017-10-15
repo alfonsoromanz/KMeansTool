@@ -8,7 +8,7 @@
 #include <QMap>
 #include "fstream"
 #include <ctime>
-#include <QProgressBar>
+#include <QProgressDialog>
 
 class MainWindow;
 
@@ -20,7 +20,7 @@ class Clusterer : public QObject
 {
     Q_OBJECT
 public:
-    Clusterer(arma::mat &dataset, const size_t clusters, int metric, int maxIterations, const QString &directory, const QString &file, bool testingMode);
+    Clusterer(arma::mat &dataset, const size_t clusters, int metric, int maxIterations, const QString &directory, const QString &file, QProgressBar * progress, bool testingMode);
     void createFiles();
 
 
@@ -37,6 +37,7 @@ private:
    int maxIterations;
    QString directory;
    QString file;
+   QProgressBar * progressBar;
    bool testingMode;
 
    QMap<int, arma::Col<double>> * calculateMeans (arma::mat data, arma::Row<size_t> originalAssignments);

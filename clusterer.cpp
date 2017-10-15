@@ -2,7 +2,7 @@
 #include "mainwindow.h"
 
 
-Clusterer::Clusterer(arma::mat &dataset, const size_t clusters, int metric, int maxIterations, const QString &directory, const QString &file, bool testingMode)
+Clusterer::Clusterer(arma::mat &dataset, const size_t clusters, int metric, int maxIterations, const QString &directory, const QString &file, QProgressBar * progress, bool testingMode)
 {
     this->dataset = dataset;
     this->clusters=clusters;
@@ -11,6 +11,7 @@ Clusterer::Clusterer(arma::mat &dataset, const size_t clusters, int metric, int 
     this->directory = directory;
     this->file = file;
     this->testingMode = testingMode;
+    this->progressBar = progress;
 }
 
 
@@ -43,10 +44,10 @@ void Clusterer::createFiles() {
 
 void Clusterer::runClustering () {
     QString result;
-    QProgressBar progress;
-    progress.setMaximum(100);
-    progress.setValue(100);
-    progress.show();
+
+    progressBar->setValue(0);
+    progressBar->show();
+
     auto begin = std::chrono::high_resolution_clock::now();
     arma::mat data(dataset); // Will save all the vectors
 
@@ -106,15 +107,15 @@ void Clusterer::runClustering () {
             } else {
                 error = std::string("Nro. de clusters incorrecto. Para el dataset especificado debe agrupar en ") + std::to_string(clusterDictionary->keys().size()) + std::string(" clusters.");
             }
-            QMessageBox messageBox;
-            messageBox.critical(0, "Error", error.c_str());
-            messageBox.setFixedSize(500,200);
-            progress.hide();
-            emit finished("", false);
+            QString errorMessage = QString::fromStdString(error);
+            progressBar->hide();
+            emit finished(errorMessage, false);
             return;
         }
 
     }
+
+    progressBar->setValue(25);
 
     //data::Save("means.txt", getMean(data,5,9), true);
 
@@ -140,7 +141,9 @@ void Clusterer::runClustering () {
         KMeans<ChebyshevDistance, RefinedStart, MaxVarianceNewCluster, NaiveKMeans, arma::mat> k_means(maxIterations);
         k_means.Cluster(data, k, assignments, centroids);
     }
+
     auto end2 = std::chrono::high_resolution_clock::now();
+    progressBar->setValue(60);
 
 
     result.append(QString("\n\nClustering Finalizado. Tiempo: " + QString::number(std::chrono::duration_cast<std::chrono::nanoseconds>(end2-begin1).count()) + " ns  (" + QString::number(std::chrono::duration_cast<std::chrono::seconds>(end2-begin1).count()) + " s)."));
@@ -174,6 +177,9 @@ void Clusterer::runClustering () {
     int wrongPoints = 0;
     QList<QString> reportedPoints;
 
+    progressBar->setValue(75);
+
+
     if (testingMode) {
 
         QMap<int,int> equivalences(this->clusterEquivalences(*clusterDictionary, centroids, metric));
@@ -196,6 +202,8 @@ void Clusterer::runClustering () {
     for (int i=0; i<assignments.n_elem; i++) {
         pointsPerCluster[assignments[i]]++;
     }
+
+    progressBar->setValue(90);
 
     int totalPoints = assignments.n_elem;
     double accuracy = double(double(totalPoints-wrongPoints) / double(totalPoints));
@@ -227,7 +235,8 @@ void Clusterer::runClustering () {
 
     auto end = std::chrono::high_resolution_clock::now();
 
-    progress.hide();
+    progressBar->setValue(100);
+    progressBar->hide();
     emit finished(result, true);
 
 }
