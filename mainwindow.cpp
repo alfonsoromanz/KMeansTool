@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->createActions();
     this->createMenu();
     this->ui->progressBar->hide();
+    this->ui->datasetProgressBar->hide();
 }
 
 void MainWindow::printMessage(const QString & message) {
@@ -51,13 +52,7 @@ void MainWindow::on_loadButton_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Cargar Dataset"), "./", tr("Archivos de texto (*.txt *.csv)"));
     if (fileName != NULL) {
-        if (this->processDataset(fileName)) {
-           this->datasetDir = this->getDirectory(fileName);
-           this->datasetName = this->getFileName(fileName);
-           this->ui->datasetLabel->setText(this->datasetName);
-           this->datasetReady = true;
-           this->ui->runButton->setDisabled(false);
-        }
+        this->loadDataset(fileName);
     }
 }
 
@@ -89,9 +84,18 @@ void MainWindow::create_dataset_clicked()
     window->show();
 }
 
-bool MainWindow::processDataset(const QString &dataset)
+void MainWindow::loadDataset(const QString &dataset)
 {
-    bool success = 1;
+    this->ui->datasetLabel->setText("Cargando dataset...");
+    this->ui->loadButton->setDisabled(true);
+    qApp->processEvents();
+    DatasetLoader * datasetLoader = new DatasetLoader (dataset, &datasetMatrix, this->ui->datasetProgressBar);
+    QThread * thread = new QThread;
+    datasetLoader->moveToThread(thread);
+    connect (datasetLoader, SIGNAL (finished(QString, QString, bool)), this, SLOT(handleDataset(QString, QString, bool)));
+    connect (thread, SIGNAL(started()), datasetLoader, SLOT(loadDataset()));
+    thread->start();
+    /*
     this->changeCursor(Qt::WaitCursor, true);
     success = data::Load(dataset.toStdString().c_str(), this->datasetMatrix, false);
     this->changeCursor(Qt::ArrowCursor, false);
@@ -105,7 +109,7 @@ bool MainWindow::processDataset(const QString &dataset)
         qApp->processEvents();
     }
 
-    return success;
+    return success;*/
 }
 
 QString MainWindow::getDirectory(const QString &filePath) {
@@ -169,5 +173,22 @@ void MainWindow::handleResult(QString message, bool success)
     }
     this->printMessageLine(message);
     this->ui->runButton->setDisabled(false);
+    qApp->processEvents();
+}
+
+void MainWindow::handleDataset(QString datasetDir, QString datasetName, bool success)
+{
+    this->datasetDir = datasetDir;
+    this->datasetName= datasetName;
+    this->datasetReady = success;
+    this->ui->runButton->setDisabled(!success);
+
+    if (success) {
+        this->ui->datasetLabel->setText(this->datasetName);
+    } else {
+        this->ui->datasetLabel->setText("Ningún dataset cargado");
+        QMessageBox::warning(this, "ERROR", "Ocurrio un error al cargar el dataset");
+    }
+    this->ui->loadButton->setDisabled(false);
     qApp->processEvents();
 }

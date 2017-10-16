@@ -28,13 +28,15 @@ SOURCES += \
         mainwindow.cpp \
     datasetgenerator.cpp \
     datasetwindow.cpp \
-    clusterer.cpp
+    clusterer.cpp \
+    datasetloader.cpp
 
 HEADERS += \
         mainwindow.h \
     datasetgenerator.h \
     datasetwindow.h \
-    clusterer.h
+    clusterer.h \
+    datasetloader.h
 
 FORMS += \
         mainwindow.ui \

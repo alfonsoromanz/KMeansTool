@@ -8,6 +8,7 @@
 #include <QtWidgets>
 #include <QApplication>
 #include "datasetgenerator.h"
+#include "datasetloader.h"
 
 namespace Ui {
 class MainWindow;
@@ -38,6 +39,7 @@ private slots:
     void on_helpButton_clicked();
 
     void handleResult(QString message, bool success);
+    void handleDataset(QString datasetDir, QString datasetName, bool success);
 
 private:
     Ui::MainWindow *ui;
@@ -52,7 +54,7 @@ private:
     QString datasetName ="";
     arma::mat datasetMatrix;
 
-    bool processDataset (const QString &dataset);
+    void loadDataset (const QString &dataset);
     QString getDirectory (const QString & filePath);
     QString getFileName (const QString & filePath);
 
