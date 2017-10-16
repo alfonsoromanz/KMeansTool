@@ -6,6 +6,7 @@
 #include <QFileInfo>
 #include <QFileDialog>
 #include "datasetgenerator.h"
+#include <QThread>
 #include <QMessageBox>
 
 namespace Ui {
@@ -28,6 +29,8 @@ private slots:
     void on_comboBox_currentIndexChanged(int index);
 
     void on_helpButton_clicked();
+
+    void handleFinished(QString fileOut, bool success);
 
 private:
     Ui::DatasetWindow *ui;

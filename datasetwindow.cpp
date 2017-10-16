@@ -7,6 +7,7 @@ DatasetWindow::DatasetWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->ui->generateButton->setDisabled(true);
+    this->ui->progressBar->hide();
 }
 
 DatasetWindow::~DatasetWindow()
@@ -48,22 +49,32 @@ void DatasetWindow::changeCursor(Qt::CursorShape cursor, bool loadingFile)
 
 void DatasetWindow::on_generateButton_clicked()
 {
-    this->changeCursor(Qt::WaitCursor, true);
-    DatasetGenerator generator;
+
+    this->ui->generateButton->setDisabled(true);
     QString file = this->centersDir + this->centersName;
     QString out = this->centersDir + "dataset_generado";
     long long int pointsPerCluster = this->ui->pointsBox->value();
     long int error = this->ui->errorBox->value();
     bool gaussian = this->ui->comboBox->currentIndex() == 1 ? false : true;
-    bool success = generator.createDataset (file, pointsPerCluster, error, gaussian, out);
-    this->changeCursor(Qt::ArrowCursor, false);
 
+    //Create the Thread
+    DatasetGenerator * datasetGenerator = new DatasetGenerator (file, pointsPerCluster, error, gaussian, out, this->ui->progressBar);
+    QThread * thread = new QThread;
+    datasetGenerator->moveToThread(thread);
+    connect (datasetGenerator, SIGNAL (finished(QString, bool)), this, SLOT(handleFinished(QString, bool)));
+    connect (thread, SIGNAL(started()), datasetGenerator, SLOT(createDataset()));
+    thread->start();
+
+}
+
+void DatasetWindow::handleFinished (QString fileOut, bool success) {
     if (success) {
-        QString info = QString("El dataset ha sido almacenado en: ") + out;
+        QString info = QString("El dataset ha sido almacenado en: ") + fileOut;
         QMessageBox::information(this, "Exito", info);
     } else {
         QMessageBox::warning(this, "ERROR", "Ocurrio un error al cargar el archivo");
     }
+    this->ui->generateButton->setDisabled(false);
 }
 
 void DatasetWindow::on_comboBox_currentIndexChanged(int index)
