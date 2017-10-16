@@ -46,6 +46,7 @@ void Clusterer::runClustering () {
     QString result;
 
     progressBar->setValue(0);
+    progressBar->setRange(0,0);
     progressBar->show();
 
     auto begin = std::chrono::high_resolution_clock::now();
@@ -115,7 +116,6 @@ void Clusterer::runClustering () {
 
     }
 
-    progressBar->setValue(25);
 
     //data::Save("means.txt", getMean(data,5,9), true);
 
@@ -143,7 +143,6 @@ void Clusterer::runClustering () {
     }
 
     auto end2 = std::chrono::high_resolution_clock::now();
-    progressBar->setValue(60);
 
 
     result.append(QString("\n\nClustering Finalizado. Tiempo: " + QString::number(std::chrono::duration_cast<std::chrono::nanoseconds>(end2-begin1).count()) + " ns  (" + QString::number(std::chrono::duration_cast<std::chrono::seconds>(end2-begin1).count()) + " s)."));
@@ -177,8 +176,6 @@ void Clusterer::runClustering () {
     int wrongPoints = 0;
     QList<QString> reportedPoints;
 
-    progressBar->setValue(75);
-
 
     if (testingMode) {
 
@@ -202,8 +199,6 @@ void Clusterer::runClustering () {
     for (int i=0; i<assignments.n_elem; i++) {
         pointsPerCluster[assignments[i]]++;
     }
-
-    progressBar->setValue(90);
 
     int totalPoints = assignments.n_elem;
     double accuracy = double(double(totalPoints-wrongPoints) / double(totalPoints));
@@ -235,7 +230,7 @@ void Clusterer::runClustering () {
 
     auto end = std::chrono::high_resolution_clock::now();
 
-    progressBar->setValue(100);
+
     progressBar->hide();
     emit finished(result, true);
 
