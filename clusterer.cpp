@@ -145,7 +145,7 @@ void Clusterer::runClustering () {
     auto end2 = std::chrono::high_resolution_clock::now();
 
 
-    result.append(QString("\n\nClustering Finalizado. Tiempo: " + QString::number(std::chrono::duration_cast<std::chrono::nanoseconds>(end2-begin1).count()) + " ns  (" + QString::number(std::chrono::duration_cast<std::chrono::seconds>(end2-begin1).count()) + " s)."));
+    result.append(QString("Clustering Finalizado. Tiempo: " + QString::number(std::chrono::duration_cast<std::chrono::nanoseconds>(end2-begin1).count()) + " ns  (" + QString::number(std::chrono::duration_cast<std::chrono::seconds>(end2-begin1).count()) + " s)."));
 
     //Save assignments
     result.append(QString(QString("\n\nGuardando asignaciones en: ") + assignmentsPath));
